@@ -560,14 +560,11 @@ public class WebMvcSseServerTransportProvider implements McpServerTransportProvi
 		 * @throws IllegalStateException if jsonMapper or messageEndpoint is not set
 		 */
 		public WebMvcSseServerTransportProvider build() {
-			if (jsonMapper == null) {
-				throw new IllegalStateException("MessageEndpoint must be set");
-			}
 			if (messageEndpoint == null) {
 				throw new IllegalStateException("MessageEndpoint must be set");
 			}
-			return new WebMvcSseServerTransportProvider(jsonMapper, baseUrl, messageEndpoint, sseEndpoint,
-					keepAliveInterval, contextExtractor);
+			return new WebMvcSseServerTransportProvider(jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper,
+					baseUrl, messageEndpoint, sseEndpoint, keepAliveInterval, contextExtractor);
 		}
 
 	}

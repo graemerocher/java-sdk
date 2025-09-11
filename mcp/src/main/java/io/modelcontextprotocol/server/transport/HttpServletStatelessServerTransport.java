@@ -295,12 +295,9 @@ public class HttpServletStatelessServerTransport extends HttpServlet implements 
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public HttpServletStatelessServerTransport build() {
-			if (this.jsonMapper == null) {
-				throw new IllegalStateException("JsonMapper must be set");
-			}
 			Assert.notNull(mcpEndpoint, "Message endpoint must be set");
-
-			return new HttpServletStatelessServerTransport(jsonMapper, mcpEndpoint, contextExtractor);
+			return new HttpServletStatelessServerTransport(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, mcpEndpoint, contextExtractor);
 		}
 
 	}

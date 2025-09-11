@@ -48,10 +48,7 @@ class WebMcpStreamableSyncServerTransportTests extends AbstractMcpSyncServerTest
 
 		@Bean
 		public WebMvcStreamableServerTransportProvider webMvcSseServerTransportProvider() {
-			return WebMvcStreamableServerTransportProvider.builder()
-				.jsonMapper(JSON_MAPPER)
-				.mcpEndpoint(MCP_ENDPOINT)
-				.build();
+			return WebMvcStreamableServerTransportProvider.builder().mcpEndpoint(MCP_ENDPOINT).build();
 		}
 
 		@Bean

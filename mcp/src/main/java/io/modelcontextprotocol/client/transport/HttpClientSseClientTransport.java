@@ -326,10 +326,9 @@ public class HttpClientSseClientTransport implements McpClientTransport {
 		 * @return a new transport instance
 		 */
 		public HttpClientSseClientTransport build() {
-			Assert.notNull(jsonMapper, "The JsonMapper can not be null");
 			HttpClient httpClient = this.clientBuilder.connectTimeout(this.connectTimeout).build();
-			return new HttpClientSseClientTransport(httpClient, requestBuilder, baseUri, sseEndpoint, jsonMapper,
-					httpRequestCustomizer);
+			return new HttpClientSseClientTransport(httpClient, requestBuilder, baseUri, sseEndpoint,
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, httpRequestCustomizer);
 		}
 
 	}

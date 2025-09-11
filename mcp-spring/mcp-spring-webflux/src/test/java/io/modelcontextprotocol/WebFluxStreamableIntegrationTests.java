@@ -52,14 +52,12 @@ class WebFluxStreamableIntegrationTests extends AbstractMcpClientServerIntegrati
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
-						.jsonMapper(JSON_MAPPER)
 						.build()).requestTimeout(Duration.ofHours(10)));
 		clientBuilders.put("webflux",
 				McpClient
 					.sync(WebClientStreamableHttpTransport
 						.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
-						.jsonMapper(JSON_MAPPER)
 						.build())
 					.requestTimeout(Duration.ofHours(10)));
 	}
@@ -78,7 +76,6 @@ class WebFluxStreamableIntegrationTests extends AbstractMcpClientServerIntegrati
 	public void before() {
 
 		this.mcpStreamableServerTransportProvider = WebFluxStreamableServerTransportProvider.builder()
-			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 			.build();

@@ -21,10 +21,7 @@ import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 class HttpServletStreamableSyncServerTests extends AbstractMcpSyncServerTests {
 
 	protected McpStreamableServerTransportProvider createMcpTransportProvider() {
-		return HttpServletStreamableServerTransportProvider.builder()
-			.jsonMapper(JSON_MAPPER)
-			.mcpEndpoint("/mcp/message")
-			.build();
+		return HttpServletStreamableServerTransportProvider.builder().mcpEndpoint("/mcp/message").build();
 	}
 
 	@Override

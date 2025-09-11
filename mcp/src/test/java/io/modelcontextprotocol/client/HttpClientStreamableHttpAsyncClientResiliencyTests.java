@@ -20,7 +20,7 @@ public class HttpClientStreamableHttpAsyncClientResiliencyTests extends Abstract
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return HttpClientStreamableHttpTransport.builder(host).jsonMapper(JSON_MAPPER).build();
+		return HttpClientStreamableHttpTransport.builder(host).build();
 	}
 
 	@Test

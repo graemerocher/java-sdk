@@ -45,10 +45,7 @@ class WebMvcStatelessIntegrationTests extends AbstractStatelessIntegrationTests 
 		@Bean
 		public WebMvcStatelessServerTransport webMvcStatelessServerTransport() {
 
-			return WebMvcStatelessServerTransport.builder()
-				.jsonMapper(JSON_MAPPER)
-				.messageEndpoint(MESSAGE_ENDPOINT)
-				.build();
+			return WebMvcStatelessServerTransport.builder().messageEndpoint(MESSAGE_ENDPOINT).build();
 
 		}
 
@@ -74,19 +71,15 @@ class WebMvcStatelessIntegrationTests extends AbstractStatelessIntegrationTests 
 	@Override
 	protected void prepareClients(int port, String mcpEndpoint) {
 
-		clientBuilders
-			.put("httpclient",
-					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + port)
-						.endpoint(mcpEndpoint)
-						.jsonMapper(JSON_MAPPER)
-						.build()).requestTimeout(Duration.ofHours(10)));
+		clientBuilders.put("httpclient", McpClient
+			.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + port).endpoint(mcpEndpoint).build())
+			.requestTimeout(Duration.ofHours(10)));
 
 		clientBuilders.put("webflux",
 				McpClient
 					.sync(WebClientStreamableHttpTransport
 						.builder(WebClient.builder().baseUrl("http://localhost:" + port))
 						.endpoint(mcpEndpoint)
-						.jsonMapper(JSON_MAPPER)
 						.build())
 					.requestTimeout(Duration.ofHours(10)));
 	}

@@ -96,7 +96,7 @@ public class HttpClientStreamableHttpTransportErrorHandlingTest {
 		server.setExecutor(null);
 		server.start();
 
-		transport = HttpClientStreamableHttpTransport.builder(HOST).jsonMapper(JSON_MAPPER).build();
+		transport = HttpClientStreamableHttpTransport.builder(HOST).build();
 	}
 
 	@AfterEach
@@ -317,7 +317,6 @@ public class HttpClientStreamableHttpTransportErrorHandlingTest {
 		var transport = HttpClientStreamableHttpTransport.builder(HOST)
 			.endpoint("/mcp-sse")
 			.openConnectionOnStartup(true) // This will trigger GET request on connect
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// First connect successfully

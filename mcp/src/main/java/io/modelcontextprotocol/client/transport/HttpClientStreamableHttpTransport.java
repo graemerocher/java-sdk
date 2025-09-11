@@ -763,11 +763,10 @@ public class HttpClientStreamableHttpTransport implements McpClientTransport {
 		 * @return a new instance of {@link HttpClientStreamableHttpTransport}
 		 */
 		public HttpClientStreamableHttpTransport build() {
-			Assert.notNull(jsonMapper, "The JsonMapper can not be null");
 			HttpClient httpClient = this.clientBuilder.connectTimeout(this.connectTimeout).build();
-
-			return new HttpClientStreamableHttpTransport(this.jsonMapper, httpClient, requestBuilder, baseUri, endpoint,
-					resumableStreams, openConnectionOnStartup, httpRequestCustomizer);
+			return new HttpClientStreamableHttpTransport(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, httpClient, requestBuilder,
+					baseUri, endpoint, resumableStreams, openConnectionOnStartup, httpRequestCustomizer);
 		}
 
 	}

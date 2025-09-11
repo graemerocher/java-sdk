@@ -42,7 +42,6 @@ class HttpServletSseIntegrationTests extends AbstractMcpClientServerIntegrationT
 	public void before() {
 		// Create and configure the transport provider
 		mcpServerTransportProvider = HttpServletSseServerTransportProvider.builder()
-			.jsonMapper(JSON_MAPPER)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.sseEndpoint(CUSTOM_SSE_ENDPOINT)
@@ -61,7 +60,6 @@ class HttpServletSseIntegrationTests extends AbstractMcpClientServerIntegrationT
 			.put("httpclient",
 					McpClient.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
 						.sseEndpoint(CUSTOM_SSE_ENDPOINT)
-						.jsonMapper(JSON_MAPPER)
 						.build()).requestTimeout(Duration.ofHours(10)));
 	}
 

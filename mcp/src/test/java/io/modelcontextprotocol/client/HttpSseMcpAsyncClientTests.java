@@ -35,7 +35,7 @@ class HttpSseMcpAsyncClientTests extends AbstractMcpAsyncClientTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return HttpClientSseClientTransport.builder(host).jsonMapper(JSON_MAPPER).build();
+		return HttpClientSseClientTransport.builder(host).build();
 	}
 
 	@BeforeAll

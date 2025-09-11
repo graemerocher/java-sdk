@@ -42,13 +42,11 @@ class WebFluxStatelessIntegrationTests extends AbstractStatelessIntegrationTests
 		clientBuilders
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
-						.jsonMapper(JSON_MAPPER)
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
 						.build()).initializationTimeout(Duration.ofHours(10)).requestTimeout(Duration.ofHours(10)));
 		clientBuilders
 			.put("webflux", McpClient
 				.sync(WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
-					.jsonMapper(JSON_MAPPER)
 					.endpoint(CUSTOM_MESSAGE_ENDPOINT)
 					.build())
 				.initializationTimeout(Duration.ofHours(10))
@@ -68,7 +66,6 @@ class WebFluxStatelessIntegrationTests extends AbstractStatelessIntegrationTests
 	@BeforeEach
 	public void before() {
 		this.mcpStreamableServerTransport = WebFluxStatelessServerTransport.builder()
-			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.build();
 

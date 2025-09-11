@@ -403,8 +403,8 @@ public class WebFluxSseClientTransport implements McpClientTransport {
 		 * @return a new transport instance
 		 */
 		public WebFluxSseClientTransport build() {
-			Assert.notNull(jsonMapper, "The JsonMapper can not be null");
-			return new WebFluxSseClientTransport(webClientBuilder, jsonMapper, sseEndpoint);
+			return new WebFluxSseClientTransport(webClientBuilder,
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, sseEndpoint);
 		}
 
 	}

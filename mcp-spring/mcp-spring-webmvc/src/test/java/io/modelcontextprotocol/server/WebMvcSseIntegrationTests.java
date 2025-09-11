@@ -47,16 +47,13 @@ class WebMvcSseIntegrationTests extends AbstractMcpClientServerIntegrationTests 
 	@Override
 	protected void prepareClients(int port, String mcpEndpoint) {
 
-		clientBuilders.put("httpclient", McpClient
-			.sync(HttpClientSseClientTransport.builder("http://localhost:" + port).jsonMapper(JSON_MAPPER).build())
-			.requestTimeout(Duration.ofHours(10)));
-
-		clientBuilders.put("webflux",
-				McpClient
-					.sync(WebFluxSseClientTransport.builder(WebClient.builder().baseUrl("http://localhost:" + port))
-						.jsonMapper(JSON_MAPPER)
-						.build())
+		clientBuilders.put("httpclient",
+				McpClient.sync(HttpClientSseClientTransport.builder("http://localhost:" + port).build())
 					.requestTimeout(Duration.ofHours(10)));
+
+		clientBuilders.put("webflux", McpClient
+			.sync(WebFluxSseClientTransport.builder(WebClient.builder().baseUrl("http://localhost:" + port)).build())
+			.requestTimeout(Duration.ofHours(10)));
 	}
 
 	@Configuration
@@ -66,7 +63,6 @@ class WebMvcSseIntegrationTests extends AbstractMcpClientServerIntegrationTests 
 		@Bean
 		public WebMvcSseServerTransportProvider webMvcSseServerTransportProvider() {
 			return WebMvcSseServerTransportProvider.builder()
-				.jsonMapper(JSON_MAPPER)
 				.messageEndpoint(MESSAGE_ENDPOINT)
 				.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 				.build();

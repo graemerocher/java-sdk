@@ -143,9 +143,7 @@ class WebFluxSseClientTransportTests {
 	@Test
 	void testBuilderPattern() {
 		// Test default builder
-		WebFluxSseClientTransport transport1 = WebFluxSseClientTransport.builder(webClientBuilder)
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		WebFluxSseClientTransport transport1 = WebFluxSseClientTransport.builder(webClientBuilder).build();
 		assertThatCode(() -> transport1.closeGracefully().block()).doesNotThrowAnyException();
 
 		// Test builder with custom ObjectMapper
@@ -158,14 +156,12 @@ class WebFluxSseClientTransportTests {
 		// Test builder with custom SSE endpoint
 		WebFluxSseClientTransport transport3 = WebFluxSseClientTransport.builder(webClientBuilder)
 			.sseEndpoint("/custom-sse")
-			.jsonMapper(JSON_MAPPER)
 			.build();
 		assertThatCode(() -> transport3.closeGracefully().block()).doesNotThrowAnyException();
 
 		// Test builder with all custom parameters
 		WebFluxSseClientTransport transport4 = WebFluxSseClientTransport.builder(webClientBuilder)
 			.sseEndpoint("/custom-sse")
-			.jsonMapper(JSON_MAPPER)
 			.build();
 		assertThatCode(() -> transport4.closeGracefully().block()).doesNotThrowAnyException();
 	}
@@ -294,9 +290,7 @@ class WebFluxSseClientTransportTests {
 		// Create a WebClient that simulates connection failures
 		WebClient.Builder failingWebClientBuilder = WebClient.builder().baseUrl("http://non-existent-host");
 
-		WebFluxSseClientTransport failingTransport = WebFluxSseClientTransport.builder(failingWebClientBuilder)
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		WebFluxSseClientTransport failingTransport = WebFluxSseClientTransport.builder(failingWebClientBuilder).build();
 
 		// Verify that the transport attempts to reconnect
 		StepVerifier.create(Mono.delay(Duration.ofSeconds(2))).expectNextCount(1).verifyComplete();

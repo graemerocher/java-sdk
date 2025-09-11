@@ -127,9 +127,7 @@ public class WebClientStreamableHttpTransportErrorHandlingTest {
 		server.setExecutor(null);
 		server.start();
 
-		transport = WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(HOST))
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		transport = WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(HOST)).build();
 	}
 
 	@AfterEach
@@ -378,7 +376,6 @@ public class WebClientStreamableHttpTransportErrorHandlingTest {
 		var transport = WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(HOST))
 			.endpoint("/mcp-sse")
 			.openConnectionOnStartup(true) // This will trigger GET request on connect
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// First connect successfully

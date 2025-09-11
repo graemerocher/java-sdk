@@ -53,14 +53,12 @@ class WebFluxSseIntegrationTests extends AbstractMcpClientServerIntegrationTests
 		clientBuilders
 			.put("httpclient",
 					McpClient.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
-						.jsonMapper(JSON_MAPPER)
 						.sseEndpoint(CUSTOM_SSE_ENDPOINT)
 						.build()).requestTimeout(Duration.ofHours(10)));
 
 		clientBuilders.put("webflux",
 				McpClient
 					.sync(WebFluxSseClientTransport.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
-						.jsonMapper(JSON_MAPPER)
 						.sseEndpoint(CUSTOM_SSE_ENDPOINT)
 						.build())
 					.requestTimeout(Duration.ofHours(10)));
@@ -80,7 +78,7 @@ class WebFluxSseIntegrationTests extends AbstractMcpClientServerIntegrationTests
 	@BeforeEach
 	public void before() {
 
-		this.mcpServerTransportProvider = new WebFluxSseServerTransportProvider.Builder().jsonMapper(JSON_MAPPER)
+		this.mcpServerTransportProvider = new WebFluxSseServerTransportProvider.Builder()
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.sseEndpoint(CUSTOM_SSE_ENDPOINT)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)

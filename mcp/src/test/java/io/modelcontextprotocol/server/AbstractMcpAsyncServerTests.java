@@ -103,7 +103,6 @@ public abstract class AbstractMcpAsyncServerTests {
 			.inputSchema(EMPTY_JSON_SCHEMA)
 			.build();
 		var mcpAsyncServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.build();
 
@@ -123,7 +122,6 @@ public abstract class AbstractMcpAsyncServerTests {
 			.build();
 
 		var mcpAsyncServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.build();
 
@@ -245,7 +243,6 @@ public abstract class AbstractMcpAsyncServerTests {
 						.callHandler((exchange, request) -> Mono.just(new CallToolResult(List.of(), false)))
 						.build() // Duplicate!
 			)
-			.jsonMapper(JSON_MAPPER)
 			.build()).isInstanceOf(IllegalArgumentException.class)
 			.hasMessage("Tool with name 'batch-varargs-tool' is already registered.");
 	}

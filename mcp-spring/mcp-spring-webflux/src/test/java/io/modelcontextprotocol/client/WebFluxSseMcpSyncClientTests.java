@@ -38,7 +38,7 @@ class WebFluxSseMcpSyncClientTests extends AbstractMcpSyncClientTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return WebFluxSseClientTransport.builder(WebClient.builder().baseUrl(host)).jsonMapper(JSON_MAPPER).build();
+		return WebFluxSseClientTransport.builder(WebClient.builder().baseUrl(host)).build();
 	}
 
 	@BeforeAll

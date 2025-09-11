@@ -33,7 +33,6 @@ class WebFluxStreamableMcpSyncServerTests extends AbstractMcpSyncServerTests {
 
 	private McpStreamableServerTransportProvider createMcpTransportProvider() {
 		var transportProvider = WebFluxStreamableServerTransportProvider.builder()
-			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(MESSAGE_ENDPOINT)
 			.build();
 

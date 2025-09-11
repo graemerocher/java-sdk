@@ -110,18 +110,15 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 
 	// Server transports
 	private final WebFluxStatelessServerTransport statelessServerTransport = WebFluxStatelessServerTransport.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final WebFluxStreamableServerTransportProvider streamableServerTransport = WebFluxStreamableServerTransportProvider
 		.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final WebFluxSseServerTransportProvider sseServerTransport = WebFluxSseServerTransportProvider.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.messageEndpoint("/mcp/message")
 		.build();
@@ -130,14 +127,12 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 	private final McpAsyncClient asyncStreamableClient = McpClient
 		.async(WebClientStreamableHttpTransport
 			.builder(WebClient.builder().baseUrl("http://localhost:" + PORT).filter(asyncClientContextProvider))
-			.jsonMapper(JSON_MAPPER)
 			.build())
 		.build();
 
 	private final McpAsyncClient asyncSseClient = McpClient
 		.async(WebFluxSseClientTransport
 			.builder(WebClient.builder().baseUrl("http://localhost:" + PORT).filter(asyncClientContextProvider))
-			.jsonMapper(JSON_MAPPER)
 			.build())
 		.build();
 
@@ -169,7 +164,6 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 		startHttpServer(statelessServerTransport.getRouterFunction());
 
 		var mcpServer = McpServer.async(statelessServerTransport)
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpStatelessServerFeatures.AsyncToolSpecification(tool, asyncStatelessHandler))
 			.build();
@@ -202,7 +196,6 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 		startHttpServer(streamableServerTransport.getRouterFunction());
 
 		var mcpServer = McpServer.async(streamableServerTransport)
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.AsyncToolSpecification(tool, null, asyncStatefulHandler))
 			.build();
@@ -235,7 +228,6 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 		startHttpServer(sseServerTransport.getRouterFunction());
 
 		var mcpServer = McpServer.async(sseServerTransport)
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.AsyncToolSpecification(tool, null, asyncStatefulHandler))
 			.build();

@@ -554,9 +554,8 @@ public class WebClientStreamableHttpTransport implements McpClientTransport {
 		 * @return a new instance of {@link WebClientStreamableHttpTransport}
 		 */
 		public WebClientStreamableHttpTransport build() {
-			Assert.notNull(jsonMapper, "The JsonMapper can not be null");
-			return new WebClientStreamableHttpTransport(jsonMapper, this.webClientBuilder, endpoint, resumableStreams,
-					openConnectionOnStartup);
+			return new WebClientStreamableHttpTransport(jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper,
+					webClientBuilder, endpoint, resumableStreams, openConnectionOnStartup);
 		}
 
 	}

@@ -230,10 +230,9 @@ public class WebMvcStatelessServerTransport implements McpStatelessServerTranspo
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public WebMvcStatelessServerTransport build() {
-			Assert.notNull(jsonMapper, "ObjectMapper must be set");
 			Assert.notNull(mcpEndpoint, "Message endpoint must be set");
-
-			return new WebMvcStatelessServerTransport(jsonMapper, mcpEndpoint, contextExtractor);
+			return new WebMvcStatelessServerTransport(jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper,
+					mcpEndpoint, contextExtractor);
 		}
 
 	}

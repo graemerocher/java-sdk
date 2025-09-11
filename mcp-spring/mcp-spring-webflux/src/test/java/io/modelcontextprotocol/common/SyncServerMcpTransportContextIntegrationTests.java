@@ -105,18 +105,15 @@ public class SyncServerMcpTransportContextIntegrationTests {
 	};
 
 	private final WebFluxStatelessServerTransport statelessServerTransport = WebFluxStatelessServerTransport.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final WebFluxStreamableServerTransportProvider streamableServerTransport = WebFluxStreamableServerTransportProvider
 		.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final WebFluxSseServerTransportProvider sseServerTransport = WebFluxSseServerTransportProvider.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.messageEndpoint("/mcp/message")
 		.build();
@@ -133,7 +130,7 @@ public class SyncServerMcpTransportContextIntegrationTests {
 				}
 				var reqWithHeader = ClientRequest.from(request).header(HEADER_NAME, headerValue.toString()).build();
 				return next.exchange(reqWithHeader);
-			}))).jsonMapper(JSON_MAPPER).build())
+			}))).build())
 		.transportContextProvider(clientContextProvider)
 		.build();
 
@@ -148,7 +145,7 @@ public class SyncServerMcpTransportContextIntegrationTests {
 			}
 			var reqWithHeader = ClientRequest.from(request).header(HEADER_NAME, headerValue.toString()).build();
 			return next.exchange(reqWithHeader);
-		}))).jsonMapper(JSON_MAPPER).build()).transportContextProvider(clientContextProvider).build();
+		}))).build()).transportContextProvider(clientContextProvider).build();
 
 	private final McpSchema.Tool tool = McpSchema.Tool.builder()
 		.name("test-tool")
@@ -186,7 +183,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 		var mcpServer = McpServer.sync(statelessServerTransport)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpStatelessServerFeatures.SyncToolSpecification(tool, statelessHandler))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		McpSchema.InitializeResult initResult = streamableClient.initialize();
@@ -214,7 +210,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 		var mcpServer = McpServer.sync(streamableServerTransport)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.SyncToolSpecification(tool, null, statefulHandler))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		McpSchema.InitializeResult initResult = streamableClient.initialize();
@@ -241,7 +236,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 		var mcpServer = McpServer.sync(sseServerTransport)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.SyncToolSpecification(tool, null, statefulHandler))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		McpSchema.InitializeResult initResult = sseClient.initialize();

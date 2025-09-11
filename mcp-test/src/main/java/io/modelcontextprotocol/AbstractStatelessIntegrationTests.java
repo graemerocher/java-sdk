@@ -57,7 +57,6 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(1000))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (
@@ -109,7 +108,6 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -148,7 +146,6 @@ public abstract class AbstractStatelessIntegrationTests {
 					return null;
 				})
 				.build())
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.requestTimeout(Duration.ofMillis(6666)).build()) {
@@ -200,7 +197,6 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.toolsChangeConsumer(toolsUpdate -> {
@@ -256,7 +252,7 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var clientBuilder = clientBuilders.get(clientType);
 
-		var mcpServer = prepareSyncServerBuilder().jsonMapper(JSON_MAPPER).build();
+		var mcpServer = prepareSyncServerBuilder().build();
 
 		try (var mcpClient = clientBuilder.build()) {
 
@@ -305,7 +301,6 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -378,7 +373,6 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -440,7 +434,6 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -491,7 +484,6 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -525,7 +517,6 @@ public abstract class AbstractStatelessIntegrationTests {
 		// Start server without tools
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {

@@ -51,7 +51,6 @@ class WebMvcStreamableIntegrationTests extends AbstractMcpClientServerIntegratio
 		@Bean
 		public WebMvcStreamableServerTransportProvider webMvcStreamableServerTransportProvider() {
 			return WebMvcStreamableServerTransportProvider.builder()
-				.jsonMapper(JSON_MAPPER)
 				.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 				.mcpEndpoint(MESSAGE_ENDPOINT)
 				.build();
@@ -84,14 +83,12 @@ class WebMvcStreamableIntegrationTests extends AbstractMcpClientServerIntegratio
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(MESSAGE_ENDPOINT)
-						.jsonMapper(JSON_MAPPER)
 						.build()).initializationTimeout(Duration.ofHours(10)).requestTimeout(Duration.ofHours(10)));
 
 		clientBuilders.put("webflux",
 				McpClient.sync(WebClientStreamableHttpTransport
 					.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
 					.endpoint(MESSAGE_ENDPOINT)
-					.jsonMapper(JSON_MAPPER)
 					.build()));
 
 		// Get the transport from Spring context

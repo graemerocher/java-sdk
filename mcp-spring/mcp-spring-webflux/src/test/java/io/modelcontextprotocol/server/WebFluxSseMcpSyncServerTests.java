@@ -38,9 +38,7 @@ class WebFluxSseMcpSyncServerTests extends AbstractMcpSyncServerTests {
 	}
 
 	private McpServerTransportProvider createMcpTransportProvider() {
-		transportProvider = new WebFluxSseServerTransportProvider.Builder().jsonMapper(JSON_MAPPER)
-			.messageEndpoint(MESSAGE_ENDPOINT)
-			.build();
+		transportProvider = new WebFluxSseServerTransportProvider.Builder().messageEndpoint(MESSAGE_ENDPOINT).build();
 		return transportProvider;
 	}
 

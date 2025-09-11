@@ -75,7 +75,6 @@ public class HttpClientStreamableHttpTransportEmptyJsonResponseTest {
 		var mockRequestCustomizer = mock(McpSyncHttpClientRequestCustomizer.class);
 		var transport = HttpClientStreamableHttpTransport.builder(host)
 			.httpRequestCustomizer(mockRequestCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		var initializeRequest = new McpSchema.InitializeRequest(ProtocolVersions.MCP_2025_03_26,

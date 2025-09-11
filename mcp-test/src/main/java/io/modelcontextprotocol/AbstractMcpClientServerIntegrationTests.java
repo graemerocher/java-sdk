@@ -82,9 +82,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(1000))
-			.jsonMapper(JSON_MAPPER)
 			.build();
-
 		try (
 				// Create client without sampling capabilities
 				var client = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0"))
@@ -116,10 +114,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 			})
 			.build();
 
-		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
-			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0").tools(tool).build();
 
 		try (
 				// Create client without sampling capabilities
@@ -181,10 +176,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 			})
 			.build();
 
-		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
-			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0").tools(tool).build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0"))
 			.capabilities(ClientCapabilities.builder().sampling().build())
@@ -265,7 +257,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(4))
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0"))
 			.capabilities(ClientCapabilities.builder().sampling().build())
@@ -338,7 +329,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(1))
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0"))
@@ -373,10 +363,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 				.then(Mono.just(mock(CallToolResult.class))))
 			.build();
 
-		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
-			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0").tools(tool).build();
 
 		// Create client without elicitation capabilities
 		try (var client = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0")).build()) {
@@ -433,10 +420,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 			})
 			.build();
 
-		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
-			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0").tools(tool).build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0"))
 			.capabilities(ClientCapabilities.builder().elicitation().build())
@@ -492,7 +476,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(3))
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0"))
@@ -564,7 +547,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(1)) // 1 second.
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample client", "0.0.0"))
@@ -601,7 +583,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder()
 			.rootsChangeHandler((exchange, rootsUpdate) -> rootsRef.set(rootsUpdate))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.capabilities(ClientCapabilities.builder().roots(true).build())
@@ -656,7 +637,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 			.build();
 
 		var mcpServer = prepareSyncServerBuilder().rootsChangeHandler((exchange, rootsUpdate) -> {
-		}).tools(tool).jsonMapper(JSON_MAPPER).build();
+		}).tools(tool).build();
 
 		try (
 				// Create client without roots capability
@@ -688,7 +669,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder()
 			.rootsChangeHandler((exchange, rootsUpdate) -> rootsRef.set(rootsUpdate))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.capabilities(ClientCapabilities.builder().roots(true).build())
@@ -723,7 +703,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder()
 			.rootsChangeHandler((exchange, rootsUpdate) -> rootsRef1.set(rootsUpdate))
 			.rootsChangeHandler((exchange, rootsUpdate) -> rootsRef2.set(rootsUpdate))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.capabilities(ClientCapabilities.builder().roots(true).build())
@@ -756,7 +735,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder()
 			.rootsChangeHandler((exchange, rootsUpdate) -> rootsRef.set(rootsUpdate))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.capabilities(ClientCapabilities.builder().roots(true).build())
@@ -812,7 +790,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -852,7 +829,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 					return null;
 				})
 				.build())
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.requestTimeout(Duration.ofMillis(6666)).build()) {
@@ -907,7 +883,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -961,7 +936,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.toolsChangeConsumer(toolsUpdate -> {
@@ -1029,7 +1003,7 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 
 		var clientBuilder = clientBuilders.get(clientType);
 
-		var mcpServer = prepareSyncServerBuilder().jsonMapper(JSON_MAPPER).build();
+		var mcpServer = prepareSyncServerBuilder().build();
 
 		try (var mcpClient = clientBuilder.build()) {
 
@@ -1104,7 +1078,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (
@@ -1199,7 +1172,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (
@@ -1289,7 +1261,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 					(mcpSyncServerExchange, getPromptRequest) -> null))
 			.completions(new McpServerFeatures.SyncCompletionSpecification(
 					new McpSchema.PromptReference("ref/prompt", "code_review", "Code review"), completionHandler))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -1355,7 +1326,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -1413,7 +1383,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -1488,7 +1457,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -1549,7 +1517,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -1600,7 +1567,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -1634,7 +1600,6 @@ public abstract class AbstractMcpClientServerIntegrationTests {
 		// Start server without tools
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {

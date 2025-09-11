@@ -16,9 +16,7 @@ public class WebClientStreamableHttpAsyncClientResiliencyTests extends AbstractM
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(host))
-			.jsonMapper(JSON_MAPPER)
-			.build();
+		return WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(host)).build();
 	}
 
 }

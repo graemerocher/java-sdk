@@ -235,7 +235,6 @@ class HttpClientSseClientTransportTests {
 	void testRetryBehavior() {
 		// Create a client that simulates connection failures
 		HttpClientSseClientTransport failingTransport = HttpClientSseClientTransport.builder("http://non-existent-host")
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify that the transport attempts to reconnect
@@ -325,7 +324,6 @@ class HttpClientSseClientTransportTests {
 				builder.version(HttpClient.Version.HTTP_2);
 				customizerCalled.set(true);
 			})
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify the customizer was called
@@ -356,7 +354,6 @@ class HttpClientSseClientTransportTests {
 				headerName.set("X-Custom-Header");
 				headerValue.set(request.headers().firstValue("X-Custom-Header").orElse(null));
 			})
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify the customizer was called
@@ -386,7 +383,6 @@ class HttpClientSseClientTransportTests {
 				builder.header("X-Api-Key", "test-api-key");
 				requestCustomizerCalled.set(true);
 			})
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify both customizers were called
@@ -404,7 +400,6 @@ class HttpClientSseClientTransportTests {
 		// Create a transport with the customizer
 		var customizedTransport = HttpClientSseClientTransport.builder(host)
 			.httpRequestCustomizer(mockCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Connect
@@ -448,7 +443,6 @@ class HttpClientSseClientTransportTests {
 		// Create a transport with the customizer
 		var customizedTransport = HttpClientSseClientTransport.builder(host)
 			.asyncHttpRequestCustomizer(mockCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Connect

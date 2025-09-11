@@ -678,11 +678,10 @@ public class WebMvcStreamableServerTransportProvider implements McpStreamableSer
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public WebMvcStreamableServerTransportProvider build() {
-			Assert.notNull(this.jsonMapper, "McpJsonMapper must be set");
 			Assert.notNull(this.mcpEndpoint, "MCP endpoint must be set");
-
-			return new WebMvcStreamableServerTransportProvider(this.jsonMapper, this.mcpEndpoint, this.disallowDelete,
-					this.contextExtractor, this.keepAliveInterval);
+			return new WebMvcStreamableServerTransportProvider(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, mcpEndpoint, disallowDelete,
+					contextExtractor, keepAliveInterval);
 		}
 
 	}

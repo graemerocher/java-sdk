@@ -505,11 +505,10 @@ public class WebFluxSseServerTransportProvider implements McpServerTransportProv
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public WebFluxSseServerTransportProvider build() {
-			Assert.notNull(jsonMapper, "ObjectMapper must be set");
 			Assert.notNull(messageEndpoint, "Message endpoint must be set");
-
-			return new WebFluxSseServerTransportProvider(jsonMapper, baseUrl, messageEndpoint, sseEndpoint,
-					keepAliveInterval, contextExtractor);
+			return new WebFluxSseServerTransportProvider(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, baseUrl, messageEndpoint,
+					sseEndpoint, keepAliveInterval, contextExtractor);
 		}
 
 	}

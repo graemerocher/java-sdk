@@ -124,7 +124,7 @@ public class HttpSseMcpAsyncClientLostConnectionTests {
 
 	@Test
 	void testPingWithEaxctExceptionType() {
-		withClient(HttpClientSseClientTransport.builder(host).jsonMapper(JSON_MAPPER).build(), mcpAsyncClient -> {
+		withClient(HttpClientSseClientTransport.builder(host).build(), mcpAsyncClient -> {
 			StepVerifier.create(mcpAsyncClient.initialize()).expectNextCount(1).verifyComplete();
 
 			disconnect();

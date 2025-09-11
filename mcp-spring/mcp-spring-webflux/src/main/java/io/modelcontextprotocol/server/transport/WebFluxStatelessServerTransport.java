@@ -212,12 +212,9 @@ public class WebFluxStatelessServerTransport implements McpStatelessServerTransp
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public WebFluxStatelessServerTransport build() {
-			if (this.jsonMapper == null) {
-				throw new IllegalStateException("JsonMapper must be set");
-			}
 			Assert.notNull(mcpEndpoint, "Message endpoint must be set");
-
-			return new WebFluxStatelessServerTransport(jsonMapper, mcpEndpoint, contextExtractor);
+			return new WebFluxStatelessServerTransport(jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper,
+					mcpEndpoint, contextExtractor);
 		}
 
 	}

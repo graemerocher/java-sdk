@@ -76,7 +76,6 @@ class HttpClientStreamableHttpTransportTest {
 
 		var transport = HttpClientStreamableHttpTransport.builder(host)
 			.httpRequestCustomizer(mockRequestCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		withTransport(transport, (t) -> {
@@ -107,7 +106,6 @@ class HttpClientStreamableHttpTransportTest {
 
 		var transport = HttpClientStreamableHttpTransport.builder(host)
 			.asyncHttpRequestCustomizer(mockRequestCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		withTransport(transport, (t) -> {

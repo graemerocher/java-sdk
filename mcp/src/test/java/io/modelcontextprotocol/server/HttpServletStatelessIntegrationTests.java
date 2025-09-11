@@ -70,7 +70,6 @@ class HttpServletStatelessIntegrationTests {
 	@BeforeEach
 	public void before() {
 		this.mcpStatelessServerTransport = HttpServletStatelessServerTransport.builder()
-			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.build();
 
@@ -87,7 +86,6 @@ class HttpServletStatelessIntegrationTests {
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
-						.jsonMapper(JSON_MAPPER)
 						.build()).initializationTimeout(Duration.ofHours(10)).requestTimeout(Duration.ofHours(10)));
 	}
 
@@ -133,7 +131,6 @@ class HttpServletStatelessIntegrationTests {
 		var mcpServer = McpServer.sync(mcpStatelessServerTransport)
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -159,7 +156,7 @@ class HttpServletStatelessIntegrationTests {
 
 		var clientBuilder = clientBuilders.get(clientType);
 
-		var mcpServer = McpServer.sync(mcpStatelessServerTransport).jsonMapper(JSON_MAPPER).build();
+		var mcpServer = McpServer.sync(mcpStatelessServerTransport).build();
 
 		try (var mcpClient = clientBuilder.build()) {
 			InitializeResult initResult = mcpClient.initialize();
@@ -198,7 +195,6 @@ class HttpServletStatelessIntegrationTests {
 					(transportContext, getPromptRequest) -> null))
 			.completions(new McpStatelessServerFeatures.SyncCompletionSpecification(
 					new PromptReference("ref/prompt", "code_review", "Code review"), completionHandler))
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -257,7 +253,6 @@ class HttpServletStatelessIntegrationTests {
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -328,7 +323,6 @@ class HttpServletStatelessIntegrationTests {
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -387,7 +381,6 @@ class HttpServletStatelessIntegrationTests {
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -437,7 +430,6 @@ class HttpServletStatelessIntegrationTests {
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.instructions("bla")
 			.tools(tool)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -471,7 +463,6 @@ class HttpServletStatelessIntegrationTests {
 		var mcpServer = McpServer.sync(mcpStatelessServerTransport)
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -543,7 +534,6 @@ class HttpServletStatelessIntegrationTests {
 		var mcpServer = McpServer.sync(mcpStatelessServerTransport)
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		Tool testTool = Tool.builder().name("test").description("test").build();

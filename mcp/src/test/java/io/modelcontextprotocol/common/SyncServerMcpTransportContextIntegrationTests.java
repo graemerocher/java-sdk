@@ -87,26 +87,22 @@ public class SyncServerMcpTransportContextIntegrationTests {
 
 	private final HttpServletStatelessServerTransport statelessServerTransport = HttpServletStatelessServerTransport
 		.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final HttpServletStreamableServerTransportProvider streamableServerTransport = HttpServletStreamableServerTransportProvider
 		.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final HttpServletSseServerTransportProvider sseServerTransport = HttpServletSseServerTransportProvider
 		.builder()
-		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.messageEndpoint("/message")
 		.build();
 
 	private final McpSyncClient streamableClient = McpClient
 		.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
-			.jsonMapper(JSON_MAPPER)
 			.httpRequestCustomizer(clientRequestCustomizer)
 			.build())
 		.transportContextProvider(clientContextProvider)
@@ -114,7 +110,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 
 	private final McpSyncClient sseClient = McpClient
 		.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
-			.jsonMapper(JSON_MAPPER)
 			.httpRequestCustomizer(clientRequestCustomizer)
 			.build())
 		.transportContextProvider(clientContextProvider)
@@ -151,7 +146,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 		startTomcat(statelessServerTransport);
 
 		var mcpServer = McpServer.sync(statelessServerTransport)
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpStatelessServerFeatures.SyncToolSpecification(tool, statelessHandler))
 			.build();
@@ -178,7 +172,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 		startTomcat(streamableServerTransport);
 
 		var mcpServer = McpServer.sync(streamableServerTransport)
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.SyncToolSpecification(tool, null, statefulHandler))
 			.build();
@@ -205,7 +198,6 @@ public class SyncServerMcpTransportContextIntegrationTests {
 		startTomcat(sseServerTransport);
 
 		var mcpServer = McpServer.sync(sseServerTransport)
-			.jsonMapper(JSON_MAPPER)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.SyncToolSpecification(tool, null, statefulHandler))
 			.build();

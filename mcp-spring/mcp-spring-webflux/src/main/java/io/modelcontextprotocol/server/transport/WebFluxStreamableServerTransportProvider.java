@@ -483,10 +483,9 @@ public class WebFluxStreamableServerTransportProvider implements McpStreamableSe
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public WebFluxStreamableServerTransportProvider build() {
-			Assert.notNull(jsonMapper, "McpJsonMapper must be set");
 			Assert.notNull(mcpEndpoint, "Message endpoint must be set");
-
-			return new WebFluxStreamableServerTransportProvider(jsonMapper, mcpEndpoint, contextExtractor,
+			return new WebFluxStreamableServerTransportProvider(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, mcpEndpoint, contextExtractor,
 					disallowDelete, keepAliveInterval);
 		}
 

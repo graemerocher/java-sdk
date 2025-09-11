@@ -108,7 +108,6 @@ public class McpTransportContextIntegrationTests {
 	private final McpSyncClient streamableClient = McpClient
 		.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 			.httpRequestCustomizer(clientRequestCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build())
 		.transportContextProvider(clientContextProvider)
 		.build();
@@ -116,7 +115,6 @@ public class McpTransportContextIntegrationTests {
 	private final McpSyncClient sseClient = McpClient
 		.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
 			.httpRequestCustomizer(clientRequestCustomizer)
-			.jsonMapper(JSON_MAPPER)
 			.build())
 		.transportContextProvider(clientContextProvider)
 		.build();
@@ -225,10 +223,7 @@ public class McpTransportContextIntegrationTests {
 		@Bean
 		public WebMvcStatelessServerTransport webMvcStatelessServerTransport() {
 
-			return WebMvcStatelessServerTransport.builder()
-				.jsonMapper(JSON_MAPPER)
-				.contextExtractor(serverContextExtractor)
-				.build();
+			return WebMvcStatelessServerTransport.builder().contextExtractor(serverContextExtractor).build();
 		}
 
 		@Bean
@@ -241,7 +236,6 @@ public class McpTransportContextIntegrationTests {
 			return McpServer.sync(transportProvider)
 				.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 				.tools(new McpStatelessServerFeatures.SyncToolSpecification(tool, statelessHandler))
-				.jsonMapper(JSON_MAPPER)
 				.build();
 		}
 
@@ -254,10 +248,7 @@ public class McpTransportContextIntegrationTests {
 		@Bean
 		public WebMvcStreamableServerTransportProvider webMvcStreamableServerTransport() {
 
-			return WebMvcStreamableServerTransportProvider.builder()
-				.jsonMapper(JSON_MAPPER)
-				.contextExtractor(serverContextExtractor)
-				.build();
+			return WebMvcStreamableServerTransportProvider.builder().contextExtractor(serverContextExtractor).build();
 		}
 
 		@Bean
@@ -271,7 +262,6 @@ public class McpTransportContextIntegrationTests {
 			return McpServer.sync(transportProvider)
 				.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 				.tools(new McpServerFeatures.SyncToolSpecification(tool, null, statefulHandler))
-				.jsonMapper(JSON_MAPPER)
 				.build();
 		}
 
@@ -285,7 +275,6 @@ public class McpTransportContextIntegrationTests {
 		public WebMvcSseServerTransportProvider webMvcSseServerTransport() {
 
 			return WebMvcSseServerTransportProvider.builder()
-				.jsonMapper(JSON_MAPPER)
 				.contextExtractor(serverContextExtractor)
 				.messageEndpoint("/mcp/message")
 				.build();
@@ -301,7 +290,6 @@ public class McpTransportContextIntegrationTests {
 			return McpServer.sync(transportProvider)
 				.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 				.tools(new McpServerFeatures.SyncToolSpecification(tool, null, statefulHandler))
-				.jsonMapper(JSON_MAPPER)
 				.build();
 
 		}

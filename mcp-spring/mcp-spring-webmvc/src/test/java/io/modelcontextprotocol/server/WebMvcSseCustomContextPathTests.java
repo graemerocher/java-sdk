@@ -51,7 +51,6 @@ class WebMvcSseCustomContextPathTests {
 
 		var clientTransport = HttpClientSseClientTransport.builder("http://localhost:" + PORT)
 			.sseEndpoint(CUSTOM_CONTEXT_PATH + WebMvcSseServerTransportProvider.DEFAULT_SSE_ENDPOINT)
-			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		clientBuilder = McpClient.sync(clientTransport);
@@ -80,7 +79,7 @@ class WebMvcSseCustomContextPathTests {
 
 	@Test
 	void testCustomContextPath() {
-		McpServer.async(mcpServerTransportProvider).serverInfo("test-server", "1.0.0").jsonMapper(JSON_MAPPER).build();
+		McpServer.async(mcpServerTransportProvider).serverInfo("test-server", "1.0.0").build();
 		var client = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0")).build();
 		assertThat(client.initialize()).isNotNull();
 	}
@@ -93,7 +92,6 @@ class WebMvcSseCustomContextPathTests {
 		public WebMvcSseServerTransportProvider webMvcSseServerTransportProvider() {
 
 			return WebMvcSseServerTransportProvider.builder()
-				.jsonMapper(JSON_MAPPER)
 				.baseUrl(CUSTOM_CONTEXT_PATH)
 				.messageEndpoint(MESSAGE_ENDPOINT)
 				.sseEndpoint(WebMvcSseServerTransportProvider.DEFAULT_SSE_ENDPOINT)

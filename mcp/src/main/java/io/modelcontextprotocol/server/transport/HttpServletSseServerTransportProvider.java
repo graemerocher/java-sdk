@@ -589,14 +589,12 @@ public class HttpServletSseServerTransportProvider extends HttpServlet implement
 		 * @throws IllegalStateException if jsonMapper or messageEndpoint is not set
 		 */
 		public HttpServletSseServerTransportProvider build() {
-			if (jsonMapper == null) {
-				throw new IllegalStateException("ObjectMapper must be set");
-			}
 			if (messageEndpoint == null) {
 				throw new IllegalStateException("MessageEndpoint must be set");
 			}
-			return new HttpServletSseServerTransportProvider(jsonMapper, baseUrl, messageEndpoint, sseEndpoint,
-					keepAliveInterval, contextExtractor);
+			return new HttpServletSseServerTransportProvider(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, baseUrl, messageEndpoint,
+					sseEndpoint, keepAliveInterval, contextExtractor);
 		}
 
 	}

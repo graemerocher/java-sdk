@@ -839,13 +839,10 @@ public class HttpServletStreamableServerTransportProvider extends HttpServlet
 		 * @throws IllegalStateException if required parameters are not set
 		 */
 		public HttpServletStreamableServerTransportProvider build() {
-			if (this.jsonMapper == null) {
-				throw new IllegalStateException("JsonMapper must be set");
-			}
 			Assert.notNull(this.mcpEndpoint, "MCP endpoint must be set");
-
-			return new HttpServletStreamableServerTransportProvider(jsonMapper, this.mcpEndpoint, this.disallowDelete,
-					this.contextExtractor, this.keepAliveInterval);
+			return new HttpServletStreamableServerTransportProvider(
+					jsonMapper == null ? McpJsonMapper.createDefault() : jsonMapper, mcpEndpoint, disallowDelete,
+					contextExtractor, keepAliveInterval);
 		}
 
 	}

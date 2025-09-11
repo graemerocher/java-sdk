@@ -40,7 +40,6 @@ class HttpServletStreamableIntegrationTests extends AbstractMcpClientServerInteg
 	public void before() {
 		// Create and configure the transport provider
 		mcpServerTransportProvider = HttpServletStreamableServerTransportProvider.builder()
-			.jsonMapper(JSON_MAPPER)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 			.mcpEndpoint(MESSAGE_ENDPOINT)
 			.keepAliveInterval(Duration.ofSeconds(1))
@@ -59,7 +58,6 @@ class HttpServletStreamableIntegrationTests extends AbstractMcpClientServerInteg
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(MESSAGE_ENDPOINT)
-						.jsonMapper(JSON_MAPPER)
 						.build()).requestTimeout(Duration.ofHours(10)));
 	}
 

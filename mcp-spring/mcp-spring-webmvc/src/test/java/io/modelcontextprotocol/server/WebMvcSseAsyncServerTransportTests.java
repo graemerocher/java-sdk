@@ -19,8 +19,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 @Timeout(15)
 class WebMvcSseAsyncServerTransportTests extends AbstractMcpAsyncServerTests {
 

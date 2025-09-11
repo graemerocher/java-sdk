@@ -24,8 +24,6 @@ import io.modelcontextprotocol.server.transport.WebFluxStatelessServerTransport;
 import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 @Timeout(15)
 class WebFluxStatelessIntegrationTests extends AbstractStatelessIntegrationTests {
 

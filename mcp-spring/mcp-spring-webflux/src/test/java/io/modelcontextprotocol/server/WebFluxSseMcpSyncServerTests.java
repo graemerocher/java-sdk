@@ -14,8 +14,6 @@ import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 /**
  * Tests for {@link McpSyncServer} using {@link WebFluxSseServerTransportProvider}.
  *

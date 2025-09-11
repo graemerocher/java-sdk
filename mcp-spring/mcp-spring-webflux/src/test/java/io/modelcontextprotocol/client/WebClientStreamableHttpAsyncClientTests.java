@@ -14,8 +14,6 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import io.modelcontextprotocol.client.transport.WebClientStreamableHttpTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 @Timeout(15)
 public class WebClientStreamableHttpAsyncClientTests extends AbstractMcpAsyncClientTests {
 

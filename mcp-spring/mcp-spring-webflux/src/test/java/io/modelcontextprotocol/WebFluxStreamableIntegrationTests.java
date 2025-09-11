@@ -29,8 +29,6 @@ import io.modelcontextprotocol.server.transport.WebFluxStreamableServerTransport
 import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 @Timeout(15)
 class WebFluxStreamableIntegrationTests extends AbstractMcpClientServerIntegrationTests {
 

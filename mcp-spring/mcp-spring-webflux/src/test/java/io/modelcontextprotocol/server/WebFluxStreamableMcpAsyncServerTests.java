@@ -13,8 +13,6 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 /**
  * Tests for {@link McpAsyncServer} using
  * {@link WebFluxStreamableServerTransportProvider}.

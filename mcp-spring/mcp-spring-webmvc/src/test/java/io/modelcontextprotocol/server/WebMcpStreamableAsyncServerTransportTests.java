@@ -20,8 +20,6 @@ import io.modelcontextprotocol.server.transport.WebMvcStreamableServerTransportP
 import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
 import reactor.netty.DisposableServer;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
-
 /**
  * Tests for {@link McpAsyncServer} using {@link WebFluxSseServerTransportProvider}.
  *

@@ -3,7 +3,6 @@
  */
 package io.modelcontextprotocol.server;
 
-import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;

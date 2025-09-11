@@ -57,14 +57,6 @@ public class StdioServerTransportProvider implements McpServerTransportProvider 
 	private final Sinks.One<Void> inboundReady = Sinks.one();
 
 	/**
-	 * Creates a new StdioServerTransportProvider with a default ObjectMapper and System
-	 * streams.
-	 */
-	public StdioServerTransportProvider() {
-		this(McpJsonMapper.createDefault(), System.in, System.out);
-	}
-
-	/**
 	 * Creates a new StdioServerTransportProvider with the specified ObjectMapper and
 	 * System streams.
 	 * @param jsonMapper The JsonMapper to use for JSON serialization/deserialization

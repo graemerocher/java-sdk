@@ -20,7 +20,6 @@ import io.modelcontextprotocol.common.McpTransportContext;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.JSONRPCRequest;
 
-import io.modelcontextprotocol.spec.json.jackson.JacksonMcpJsonMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,6 +36,7 @@ import reactor.test.StepVerifier;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
@@ -77,8 +77,7 @@ class HttpClientSseClientTransportTests {
 
 		public TestHttpClientSseClientTransport(final String baseUri) {
 			super(HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build(),
-					HttpRequest.newBuilder().header("Content-Type", "application/json"), baseUri, "/sse",
-					new JacksonMcpJsonMapper(new com.fasterxml.jackson.databind.ObjectMapper()),
+					HttpRequest.newBuilder().header("Content-Type", "application/json"), baseUri, "/sse", JSON_MAPPER,
 					McpAsyncHttpClientRequestCustomizer.NOOP);
 		}
 
@@ -236,6 +235,7 @@ class HttpClientSseClientTransportTests {
 	void testRetryBehavior() {
 		// Create a client that simulates connection failures
 		HttpClientSseClientTransport failingTransport = HttpClientSseClientTransport.builder("http://non-existent-host")
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify that the transport attempts to reconnect
@@ -325,6 +325,7 @@ class HttpClientSseClientTransportTests {
 				builder.version(HttpClient.Version.HTTP_2);
 				customizerCalled.set(true);
 			})
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify the customizer was called
@@ -355,6 +356,7 @@ class HttpClientSseClientTransportTests {
 				headerName.set("X-Custom-Header");
 				headerValue.set(request.headers().firstValue("X-Custom-Header").orElse(null));
 			})
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify the customizer was called
@@ -384,6 +386,7 @@ class HttpClientSseClientTransportTests {
 				builder.header("X-Api-Key", "test-api-key");
 				requestCustomizerCalled.set(true);
 			})
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Verify both customizers were called
@@ -401,6 +404,7 @@ class HttpClientSseClientTransportTests {
 		// Create a transport with the customizer
 		var customizedTransport = HttpClientSseClientTransport.builder(host)
 			.httpRequestCustomizer(mockCustomizer)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Connect
@@ -444,6 +448,7 @@ class HttpClientSseClientTransportTests {
 		// Create a transport with the customizer
 		var customizedTransport = HttpClientSseClientTransport.builder(host)
 			.asyncHttpRequestCustomizer(mockCustomizer)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// Connect

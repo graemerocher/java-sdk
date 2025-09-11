@@ -7,7 +7,6 @@ package io.modelcontextprotocol.common;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.client.McpAsyncClient;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.Timeout;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -100,19 +100,19 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 
 	private final HttpServletStatelessServerTransport statelessServerTransport = HttpServletStatelessServerTransport
 		.builder()
-		.objectMapper(new ObjectMapper())
+		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final HttpServletStreamableServerTransportProvider streamableServerTransport = HttpServletStreamableServerTransportProvider
 		.builder()
-		.objectMapper(new ObjectMapper())
+		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.build();
 
 	private final HttpServletSseServerTransportProvider sseServerTransport = HttpServletSseServerTransportProvider
 		.builder()
-		.objectMapper(new ObjectMapper())
+		.jsonMapper(JSON_MAPPER)
 		.contextExtractor(serverContextExtractor)
 		.messageEndpoint("/message")
 		.build();
@@ -120,12 +120,14 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 	private final McpAsyncClient asyncStreamableClient = McpClient
 		.async(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 			.asyncHttpRequestCustomizer(asyncClientRequestCustomizer)
+			.jsonMapper(JSON_MAPPER)
 			.build())
 		.build();
 
 	private final McpAsyncClient asyncSseClient = McpClient
 		.async(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
 			.asyncHttpRequestCustomizer(asyncClientRequestCustomizer)
+			.jsonMapper(JSON_MAPPER)
 			.build())
 		.build();
 
@@ -172,6 +174,7 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 		var mcpServer = McpServer.async(statelessServerTransport)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpStatelessServerFeatures.AsyncToolSpecification(tool, asyncStatelessHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		StepVerifier.create(asyncStreamableClient.initialize()).assertNext(initResult -> {
@@ -234,6 +237,7 @@ public class AsyncServerMcpTransportContextIntegrationTests {
 		var mcpServer = McpServer.async(sseServerTransport)
 			.capabilities(McpSchema.ServerCapabilities.builder().tools(true).build())
 			.tools(new McpServerFeatures.AsyncToolSpecification(tool, null, asyncStatefulHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		StepVerifier.create(asyncSseClient.initialize()).assertNext(initResult -> {

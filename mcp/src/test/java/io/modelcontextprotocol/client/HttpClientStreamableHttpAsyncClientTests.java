@@ -13,6 +13,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
+
 @Timeout(15)
 public class HttpClientStreamableHttpAsyncClientTests extends AbstractMcpAsyncClientTests {
 
@@ -28,8 +30,7 @@ public class HttpClientStreamableHttpAsyncClientTests extends AbstractMcpAsyncCl
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-
-		return HttpClientStreamableHttpTransport.builder(host).build();
+		return HttpClientStreamableHttpTransport.builder(host).jsonMapper(JSON_MAPPER).build();
 	}
 
 	@BeforeAll

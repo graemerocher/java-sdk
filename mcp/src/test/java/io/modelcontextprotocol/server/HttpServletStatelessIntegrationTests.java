@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
 import io.modelcontextprotocol.common.McpTransportContext;
@@ -48,6 +47,8 @@ import org.springframework.web.client.RestClient;
 
 import static io.modelcontextprotocol.server.transport.HttpServletStatelessServerTransport.APPLICATION_JSON;
 import static io.modelcontextprotocol.server.transport.HttpServletStatelessServerTransport.TEXT_EVENT_STREAM;
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
+import static io.modelcontextprotocol.util.ToolsUtils.EMPTY_JSON_SCHEMA;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +70,7 @@ class HttpServletStatelessIntegrationTests {
 	@BeforeEach
 	public void before() {
 		this.mcpStatelessServerTransport = HttpServletStatelessServerTransport.builder()
-			.objectMapper(new ObjectMapper())
+			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.build();
 
@@ -86,6 +87,7 @@ class HttpServletStatelessIntegrationTests {
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
+						.jsonMapper(JSON_MAPPER)
 						.build()).initializationTimeout(Duration.ofHours(10)).requestTimeout(Duration.ofHours(10)));
 	}
 
@@ -108,15 +110,6 @@ class HttpServletStatelessIntegrationTests {
 	// ---------------------------------------
 	// Tools Tests
 	// ---------------------------------------
-
-	String emptyJsonSchema = """
-			{
-			"$schema": "http://json-schema.org/draft-07/schema#",
-			"type": "object",
-			"properties": {}
-			}
-			""";
-
 	@ParameterizedTest(name = "{0} : {displayName} ")
 	@ValueSource(strings = { "httpclient" })
 	void testToolCallSuccess(String clientType) {
@@ -125,7 +118,8 @@ class HttpServletStatelessIntegrationTests {
 
 		var callResponse = new CallToolResult(List.of(new McpSchema.TextContent("CALL RESPONSE")), null);
 		McpStatelessServerFeatures.SyncToolSpecification tool1 = new McpStatelessServerFeatures.SyncToolSpecification(
-				new Tool("tool1", "tool1 description", emptyJsonSchema), (transportContext, request) -> {
+				Tool.builder().name("tool1").title("tool1 description").inputSchema(EMPTY_JSON_SCHEMA).build(),
+				(transportContext, request) -> {
 					// perform a blocking call to a remote service
 					String response = RestClient.create()
 						.get()
@@ -139,6 +133,7 @@ class HttpServletStatelessIntegrationTests {
 		var mcpServer = McpServer.sync(mcpStatelessServerTransport)
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -164,7 +159,7 @@ class HttpServletStatelessIntegrationTests {
 
 		var clientBuilder = clientBuilders.get(clientType);
 
-		var mcpServer = McpServer.sync(mcpStatelessServerTransport).build();
+		var mcpServer = McpServer.sync(mcpStatelessServerTransport).jsonMapper(JSON_MAPPER).build();
 
 		try (var mcpClient = clientBuilder.build()) {
 			InitializeResult initResult = mcpClient.initialize();
@@ -203,6 +198,7 @@ class HttpServletStatelessIntegrationTests {
 					(transportContext, getPromptRequest) -> null))
 			.completions(new McpStatelessServerFeatures.SyncCompletionSpecification(
 					new PromptReference("ref/prompt", "code_review", "Code review"), completionHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -261,6 +257,7 @@ class HttpServletStatelessIntegrationTests {
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -331,6 +328,7 @@ class HttpServletStatelessIntegrationTests {
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -389,6 +387,7 @@ class HttpServletStatelessIntegrationTests {
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -438,6 +437,7 @@ class HttpServletStatelessIntegrationTests {
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.instructions("bla")
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -471,6 +471,7 @@ class HttpServletStatelessIntegrationTests {
 		var mcpServer = McpServer.sync(mcpStatelessServerTransport)
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -542,6 +543,7 @@ class HttpServletStatelessIntegrationTests {
 		var mcpServer = McpServer.sync(mcpStatelessServerTransport)
 			.serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		Tool testTool = Tool.builder().name("test").description("test").build();
@@ -560,7 +562,7 @@ class HttpServletStatelessIntegrationTests {
 		MockHttpServletRequest request = new MockHttpServletRequest("POST", CUSTOM_MESSAGE_ENDPOINT);
 		MockHttpServletResponse response = new MockHttpServletResponse();
 
-		byte[] content = new ObjectMapper().writeValueAsBytes(jsonrpcRequest);
+		byte[] content = JSON_MAPPER.writeValueAsBytes(jsonrpcRequest);
 		request.setContent(content);
 		request.addHeader("Content-Type", "application/json");
 		request.addHeader("Content-Length", Integer.toString(content.length));
@@ -572,7 +574,7 @@ class HttpServletStatelessIntegrationTests {
 
 		mcpStatelessServerTransport.service(request, response);
 
-		McpSchema.JSONRPCResponse jsonrpcResponse = new ObjectMapper().readValue(response.getContentAsByteArray(),
+		McpSchema.JSONRPCResponse jsonrpcResponse = JSON_MAPPER.readValue(response.getContentAsByteArray(),
 				McpSchema.JSONRPCResponse.class);
 
 		assertThat(jsonrpcResponse).isNotNull();

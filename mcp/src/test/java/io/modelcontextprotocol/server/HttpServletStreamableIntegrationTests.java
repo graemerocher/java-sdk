@@ -7,7 +7,6 @@ package io.modelcontextprotocol.server;
 import java.time.Duration;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
 import io.modelcontextprotocol.common.McpTransportContext;
@@ -23,6 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Timeout;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Timeout(15)
@@ -40,7 +40,7 @@ class HttpServletStreamableIntegrationTests extends AbstractMcpClientServerInteg
 	public void before() {
 		// Create and configure the transport provider
 		mcpServerTransportProvider = HttpServletStreamableServerTransportProvider.builder()
-			.objectMapper(new ObjectMapper())
+			.jsonMapper(JSON_MAPPER)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 			.mcpEndpoint(MESSAGE_ENDPOINT)
 			.keepAliveInterval(Duration.ofSeconds(1))
@@ -59,6 +59,7 @@ class HttpServletStreamableIntegrationTests extends AbstractMcpClientServerInteg
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(MESSAGE_ENDPOINT)
+						.jsonMapper(JSON_MAPPER)
 						.build()).requestTimeout(Duration.ofHours(10)));
 	}
 

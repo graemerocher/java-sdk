@@ -4,6 +4,7 @@
 
 package io.modelcontextprotocol.client;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.io.IOException;
@@ -123,7 +124,7 @@ public class HttpSseMcpAsyncClientLostConnectionTests {
 
 	@Test
 	void testPingWithEaxctExceptionType() {
-		withClient(HttpClientSseClientTransport.builder(host).build(), mcpAsyncClient -> {
+		withClient(HttpClientSseClientTransport.builder(host).jsonMapper(JSON_MAPPER).build(), mcpAsyncClient -> {
 			StepVerifier.create(mcpAsyncClient.initialize()).expectNextCount(1).verifyComplete();
 
 			disconnect();

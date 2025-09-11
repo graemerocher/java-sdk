@@ -16,8 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.modelcontextprotocol.spec.json.TypeRef;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.modelcontextprotocol.json.TypeRef;
 
 import io.modelcontextprotocol.common.McpTransportContext;
 import io.modelcontextprotocol.server.McpTransportContextExtractor;
@@ -29,8 +28,7 @@ import io.modelcontextprotocol.spec.McpStreamableServerTransport;
 import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
 import io.modelcontextprotocol.spec.ProtocolVersions;
 import io.modelcontextprotocol.util.Assert;
-import io.modelcontextprotocol.spec.json.McpJsonMapper;
-import io.modelcontextprotocol.spec.json.jackson.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.util.KeepAliveScheduler;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.ServletException;
@@ -774,20 +772,6 @@ public class HttpServletStreamableServerTransportProvider extends HttpServlet
 				serverRequest) -> McpTransportContext.EMPTY;
 
 		private Duration keepAliveInterval;
-
-		/**
-		 * Sets the ObjectMapper to use for JSON serialization/deserialization of MCP
-		 * messages.
-		 * @param objectMapper The ObjectMapper instance. Must not be null.
-		 * @return this builder instance
-		 * @throws IllegalArgumentException if objectMapper is null
-		 */
-		@Deprecated(forRemoval = true)
-		public Builder objectMapper(ObjectMapper objectMapper) {
-			Assert.notNull(objectMapper, "ObjectMapper must not be null");
-			this.jsonMapper = new JacksonMcpJsonMapper(objectMapper);
-			return this;
-		}
 
 		/**
 		 * Sets the JsonMapper to use for JSON serialization/deserialization of MCP

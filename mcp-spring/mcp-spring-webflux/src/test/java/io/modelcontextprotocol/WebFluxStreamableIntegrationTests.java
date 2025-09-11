@@ -16,8 +16,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
 import io.modelcontextprotocol.client.transport.WebClientStreamableHttpTransport;
@@ -30,6 +28,8 @@ import io.modelcontextprotocol.server.TestUtil;
 import io.modelcontextprotocol.server.transport.WebFluxStreamableServerTransportProvider;
 import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
+
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 
 @Timeout(15)
 class WebFluxStreamableIntegrationTests extends AbstractMcpClientServerIntegrationTests {
@@ -52,12 +52,14 @@ class WebFluxStreamableIntegrationTests extends AbstractMcpClientServerIntegrati
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
+						.jsonMapper(JSON_MAPPER)
 						.build()).requestTimeout(Duration.ofHours(10)));
 		clientBuilders.put("webflux",
 				McpClient
 					.sync(WebClientStreamableHttpTransport
 						.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
 						.endpoint(CUSTOM_MESSAGE_ENDPOINT)
+						.jsonMapper(JSON_MAPPER)
 						.build())
 					.requestTimeout(Duration.ofHours(10)));
 	}
@@ -76,7 +78,7 @@ class WebFluxStreamableIntegrationTests extends AbstractMcpClientServerIntegrati
 	public void before() {
 
 		this.mcpStreamableServerTransportProvider = WebFluxStreamableServerTransportProvider.builder()
-			.objectMapper(new ObjectMapper())
+			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 			.build();

@@ -4,9 +4,7 @@
 
 package io.modelcontextprotocol.server.transport;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.modelcontextprotocol.spec.json.McpJsonMapper;
-import io.modelcontextprotocol.spec.json.jackson.JacksonMcpJsonMapper;
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.common.McpTransportContext;
 import io.modelcontextprotocol.server.McpStatelessServerHandler;
 import io.modelcontextprotocol.server.McpTransportContextExtractor;
@@ -164,19 +162,6 @@ public class WebFluxStatelessServerTransport implements McpStatelessServerTransp
 
 		private Builder() {
 			// used by a static method
-		}
-
-		/**
-		 * Sets the ObjectMapper to use for JSON serialization/deserialization of MCP
-		 * messages.
-		 * @param objectMapper The ObjectMapper instance. Must not be null.
-		 * @return this builder instance
-		 * @throws IllegalArgumentException if objectMapper is null
-		 */
-		public Builder objectMapper(ObjectMapper objectMapper) {
-			Assert.notNull(objectMapper, "ObjectMapper must not be null");
-			this.jsonMapper = new JacksonMcpJsonMapper(objectMapper);
-			return this;
 		}
 
 		/**

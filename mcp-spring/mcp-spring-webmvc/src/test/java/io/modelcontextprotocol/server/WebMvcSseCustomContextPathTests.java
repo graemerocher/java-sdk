@@ -3,7 +3,6 @@
  */
 package io.modelcontextprotocol.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.server.transport.WebMvcSseServerTransportProvider;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WebMvcSseCustomContextPathTests {
@@ -51,6 +51,7 @@ class WebMvcSseCustomContextPathTests {
 
 		var clientTransport = HttpClientSseClientTransport.builder("http://localhost:" + PORT)
 			.sseEndpoint(CUSTOM_CONTEXT_PATH + WebMvcSseServerTransportProvider.DEFAULT_SSE_ENDPOINT)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		clientBuilder = McpClient.sync(clientTransport);
@@ -79,7 +80,7 @@ class WebMvcSseCustomContextPathTests {
 
 	@Test
 	void testCustomContextPath() {
-		McpServer.async(mcpServerTransportProvider).serverInfo("test-server", "1.0.0").build();
+		McpServer.async(mcpServerTransportProvider).serverInfo("test-server", "1.0.0").jsonMapper(JSON_MAPPER).build();
 		var client = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0")).build();
 		assertThat(client.initialize()).isNotNull();
 	}
@@ -92,7 +93,7 @@ class WebMvcSseCustomContextPathTests {
 		public WebMvcSseServerTransportProvider webMvcSseServerTransportProvider() {
 
 			return WebMvcSseServerTransportProvider.builder()
-				.objectMapper(new ObjectMapper())
+				.jsonMapper(JSON_MAPPER)
 				.baseUrl(CUSTOM_CONTEXT_PATH)
 				.messageEndpoint(MESSAGE_ENDPOINT)
 				.sseEndpoint(WebMvcSseServerTransportProvider.DEFAULT_SSE_ENDPOINT)

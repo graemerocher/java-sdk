@@ -14,6 +14,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import io.modelcontextprotocol.client.transport.WebClientStreamableHttpTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
+
 @Timeout(15)
 public class WebClientStreamableHttpSyncClientTests extends AbstractMcpSyncClientTests {
 
@@ -29,7 +31,9 @@ public class WebClientStreamableHttpSyncClientTests extends AbstractMcpSyncClien
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(host)).build();
+		return WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(host))
+			.jsonMapper(JSON_MAPPER)
+			.build();
 	}
 
 	@BeforeAll

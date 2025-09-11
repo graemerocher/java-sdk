@@ -20,6 +20,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -75,6 +76,7 @@ class HttpClientStreamableHttpTransportTest {
 
 		var transport = HttpClientStreamableHttpTransport.builder(host)
 			.httpRequestCustomizer(mockRequestCustomizer)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		withTransport(transport, (t) -> {
@@ -105,6 +107,7 @@ class HttpClientStreamableHttpTransportTest {
 
 		var transport = HttpClientStreamableHttpTransport.builder(host)
 			.asyncHttpRequestCustomizer(mockRequestCustomizer)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		withTransport(transport, (t) -> {

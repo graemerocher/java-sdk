@@ -19,6 +19,7 @@ import io.modelcontextprotocol.client.transport.customizer.McpSyncHttpClientRequ
 import io.modelcontextprotocol.common.McpTransportContext;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -48,7 +49,10 @@ class HttpSseMcpSyncClientTests extends AbstractMcpSyncClientTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return HttpClientSseClientTransport.builder(host).httpRequestCustomizer(requestCustomizer).build();
+		return HttpClientSseClientTransport.builder(host)
+			.jsonMapper(JSON_MAPPER)
+			.httpRequestCustomizer(requestCustomizer)
+			.build();
 	}
 
 	@BeforeAll

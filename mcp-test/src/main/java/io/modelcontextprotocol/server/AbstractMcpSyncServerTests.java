@@ -4,6 +4,8 @@
 
 package io.modelcontextprotocol.server;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
+import static io.modelcontextprotocol.utils.ToolsUtils.EMPTY_JSON_SCHEMA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -75,21 +77,27 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testGracefulShutdown() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatCode(() -> mcpSyncServer.closeGracefully()).doesNotThrowAnyException();
 	}
 
 	@Test
 	void testImmediateClose() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatCode(() -> mcpSyncServer.close()).doesNotThrowAnyException();
 	}
 
 	@Test
 	void testGetAsyncServer() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThat(mcpSyncServer.getAsyncServer()).isNotNull();
 
@@ -99,23 +107,15 @@ public abstract class AbstractMcpSyncServerTests {
 	// ---------------------------------------
 	// Tools Tests
 	// ---------------------------------------
-
-	String emptyJsonSchema = """
-			{
-				"$schema": "http://json-schema.org/draft-07/schema#",
-				"type": "object",
-				"properties": {}
-			}
-			""";
-
 	@Test
 	@Deprecated
 	void testAddTool() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
-		Tool newTool = new McpSchema.Tool("new-tool", "New test tool", emptyJsonSchema);
+		Tool newTool = Tool.builder().name("new-tool").title("New test tool").inputSchema(EMPTY_JSON_SCHEMA).build();
 		assertThatCode(() -> mcpSyncServer.addTool(new McpServerFeatures.SyncToolSpecification(newTool,
 				(exchange, args) -> new CallToolResult(List.of(), false))))
 			.doesNotThrowAnyException();
@@ -127,9 +127,10 @@ public abstract class AbstractMcpSyncServerTests {
 	void testAddToolCall() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
-		Tool newTool = new McpSchema.Tool("new-tool", "New test tool", emptyJsonSchema);
+		Tool newTool = Tool.builder().name("new-tool").title("New test tool").inputSchema(EMPTY_JSON_SCHEMA).build();
 		assertThatCode(() -> mcpSyncServer.addTool(McpServerFeatures.SyncToolSpecification.builder()
 			.tool(newTool)
 			.callHandler((exchange, request) -> new CallToolResult(List.of(), false))
@@ -141,11 +142,16 @@ public abstract class AbstractMcpSyncServerTests {
 	@Test
 	@Deprecated
 	void testAddDuplicateTool() {
-		Tool duplicateTool = new McpSchema.Tool(TEST_TOOL_NAME, "Duplicate tool", emptyJsonSchema);
+		Tool duplicateTool = Tool.builder()
+			.name(TEST_TOOL_NAME)
+			.title("Duplicate tool")
+			.inputSchema(EMPTY_JSON_SCHEMA)
+			.build();
 
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tool(duplicateTool, (exchange, args) -> new CallToolResult(List.of(), false))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatThrownBy(() -> mcpSyncServer.addTool(new McpServerFeatures.SyncToolSpecification(duplicateTool,
@@ -158,11 +164,16 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testAddDuplicateToolCall() {
-		Tool duplicateTool = new McpSchema.Tool(TEST_TOOL_NAME, "Duplicate tool", emptyJsonSchema);
+		Tool duplicateTool = Tool.builder()
+			.name(TEST_TOOL_NAME)
+			.title("Duplicate tool")
+			.inputSchema(EMPTY_JSON_SCHEMA)
+			.build();
 
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.toolCall(duplicateTool, (exchange, request) -> new CallToolResult(List.of(), false))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatThrownBy(() -> mcpSyncServer.addTool(McpServerFeatures.SyncToolSpecification.builder()
@@ -176,8 +187,11 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testDuplicateToolCallDuringBuilding() {
-		Tool duplicateTool = new Tool("duplicate-build-toolcall", "Duplicate toolcall during building",
-				emptyJsonSchema);
+		Tool duplicateTool = Tool.builder()
+			.name("duplicate-build-toolcall")
+			.title("Duplicate toolcall during building")
+			.inputSchema(EMPTY_JSON_SCHEMA)
+			.build();
 
 		assertThatThrownBy(() -> prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
@@ -189,7 +203,11 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testDuplicateToolsInBatchListRegistration() {
-		Tool duplicateTool = new Tool("batch-list-tool", "Duplicate tool in batch list", emptyJsonSchema);
+		Tool duplicateTool = Tool.builder()
+			.name("batch-list-tool")
+			.title("Duplicate tool in batch list")
+			.inputSchema(EMPTY_JSON_SCHEMA)
+			.build();
 		List<McpServerFeatures.SyncToolSpecification> specs = List.of(
 				McpServerFeatures.SyncToolSpecification.builder()
 					.tool(duplicateTool)
@@ -210,7 +228,11 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testDuplicateToolsInBatchVarargsRegistration() {
-		Tool duplicateTool = new Tool("batch-varargs-tool", "Duplicate tool in batch varargs", emptyJsonSchema);
+		Tool duplicateTool = Tool.builder()
+			.name("batch-varargs-tool")
+			.title("Duplicate tool in batch varargs")
+			.inputSchema(EMPTY_JSON_SCHEMA)
+			.build();
 
 		assertThatThrownBy(() -> prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
@@ -229,11 +251,12 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testRemoveTool() {
-		Tool tool = new McpSchema.Tool(TEST_TOOL_NAME, "Test tool", emptyJsonSchema);
+		Tool tool = Tool.builder().name(TEST_TOOL_NAME).title("Test tool").inputSchema(EMPTY_JSON_SCHEMA).build();
 
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.toolCall(tool, (exchange, args) -> new CallToolResult(List.of(), false))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatCode(() -> mcpSyncServer.removeTool(TEST_TOOL_NAME)).doesNotThrowAnyException();
@@ -245,6 +268,7 @@ public abstract class AbstractMcpSyncServerTests {
 	void testRemoveNonexistentTool() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatThrownBy(() -> mcpSyncServer.removeTool("nonexistent-tool")).isInstanceOf(McpError.class)
@@ -255,7 +279,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testNotifyToolsListChanged() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatCode(() -> mcpSyncServer.notifyToolsListChanged()).doesNotThrowAnyException();
 
@@ -268,7 +294,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testNotifyResourcesListChanged() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatCode(() -> mcpSyncServer.notifyResourcesListChanged()).doesNotThrowAnyException();
 
@@ -277,7 +305,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testNotifyResourcesUpdated() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatCode(() -> mcpSyncServer
 			.notifyResourcesUpdated(new McpSchema.ResourcesUpdatedNotification(TEST_RESOURCE_URI)))
@@ -290,6 +320,7 @@ public abstract class AbstractMcpSyncServerTests {
 	void testAddResource() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().resources(true, false).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		Resource resource = new Resource(TEST_RESOURCE_URI, "Test Resource", "text/plain", "Test resource description",
@@ -306,6 +337,7 @@ public abstract class AbstractMcpSyncServerTests {
 	void testAddResourceWithNullSpecification() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().resources(true, false).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatThrownBy(() -> mcpSyncServer.addResource((McpServerFeatures.SyncResourceSpecification) null))
@@ -317,7 +349,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testAddResourceWithoutCapability() {
-		var serverWithoutResources = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var serverWithoutResources = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		Resource resource = new Resource(TEST_RESOURCE_URI, "Test Resource", "text/plain", "Test resource description",
 				null);
@@ -330,7 +364,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testRemoveResourceWithoutCapability() {
-		var serverWithoutResources = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var serverWithoutResources = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatThrownBy(() -> serverWithoutResources.removeResource(TEST_RESOURCE_URI)).isInstanceOf(McpError.class)
 			.hasMessage("Server must be configured with resource capabilities");
@@ -342,7 +378,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testNotifyPromptsListChanged() {
-		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatCode(() -> mcpSyncServer.notifyPromptsListChanged()).doesNotThrowAnyException();
 
@@ -353,6 +391,7 @@ public abstract class AbstractMcpSyncServerTests {
 	void testAddPromptWithNullSpecification() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().prompts(false).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatThrownBy(() -> mcpSyncServer.addPrompt((McpServerFeatures.SyncPromptSpecification) null))
@@ -362,7 +401,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testAddPromptWithoutCapability() {
-		var serverWithoutPrompts = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var serverWithoutPrompts = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		Prompt prompt = new Prompt(TEST_PROMPT_NAME, "Test Prompt", "Test Prompt", List.of());
 		McpServerFeatures.SyncPromptSpecification specification = new McpServerFeatures.SyncPromptSpecification(prompt,
@@ -375,7 +416,9 @@ public abstract class AbstractMcpSyncServerTests {
 
 	@Test
 	void testRemovePromptWithoutCapability() {
-		var serverWithoutPrompts = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var serverWithoutPrompts = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThatThrownBy(() -> serverWithoutPrompts.removePrompt(TEST_PROMPT_NAME)).isInstanceOf(McpError.class)
 			.hasMessage("Server must be configured with prompt capabilities");
@@ -391,6 +434,7 @@ public abstract class AbstractMcpSyncServerTests {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().prompts(true).build())
 			.prompts(specification)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatCode(() -> mcpSyncServer.removePrompt(TEST_PROMPT_NAME)).doesNotThrowAnyException();
@@ -402,6 +446,7 @@ public abstract class AbstractMcpSyncServerTests {
 	void testRemoveNonexistentPrompt() {
 		var mcpSyncServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().prompts(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThatThrownBy(() -> mcpSyncServer.removePrompt("nonexistent-prompt")).isInstanceOf(McpError.class)
@@ -427,6 +472,7 @@ public abstract class AbstractMcpSyncServerTests {
 					rootsReceived[0] = roots.get(0);
 				}
 			}))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThat(singleConsumerServer).isNotNull();
@@ -443,6 +489,7 @@ public abstract class AbstractMcpSyncServerTests {
 				consumer1Called[0] = true;
 				rootsContent[0] = roots;
 			}, (exchange, roots) -> consumer2Called[0] = true))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThat(multipleConsumersServer).isNotNull();
@@ -454,6 +501,7 @@ public abstract class AbstractMcpSyncServerTests {
 			.rootsChangeHandlers(List.of((exchange, roots) -> {
 				throw new RuntimeException("Test error");
 			}))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		assertThat(errorHandlingServer).isNotNull();
@@ -461,7 +509,9 @@ public abstract class AbstractMcpSyncServerTests {
 		onClose();
 
 		// Test without consumers
-		var noConsumersServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0").build();
+		var noConsumersServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
+			.jsonMapper(JSON_MAPPER)
+			.build();
 
 		assertThat(noConsumersServer).isNotNull();
 		assertThatCode(() -> noConsumersServer.closeGracefully()).doesNotThrowAnyException();

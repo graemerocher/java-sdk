@@ -3,6 +3,7 @@
  */
 package io.modelcontextprotocol.server;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
@@ -18,8 +19,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.modelcontextprotocol.AbstractStatelessIntegrationTests;
 import io.modelcontextprotocol.client.McpClient;
@@ -47,7 +46,7 @@ class WebMvcStatelessIntegrationTests extends AbstractStatelessIntegrationTests 
 		public WebMvcStatelessServerTransport webMvcStatelessServerTransport() {
 
 			return WebMvcStatelessServerTransport.builder()
-				.objectMapper(new ObjectMapper())
+				.jsonMapper(JSON_MAPPER)
 				.messageEndpoint(MESSAGE_ENDPOINT)
 				.build();
 
@@ -75,15 +74,19 @@ class WebMvcStatelessIntegrationTests extends AbstractStatelessIntegrationTests 
 	@Override
 	protected void prepareClients(int port, String mcpEndpoint) {
 
-		clientBuilders.put("httpclient", McpClient
-			.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + port).endpoint(mcpEndpoint).build())
-			.requestTimeout(Duration.ofHours(10)));
+		clientBuilders
+			.put("httpclient",
+					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + port)
+						.endpoint(mcpEndpoint)
+						.jsonMapper(JSON_MAPPER)
+						.build()).requestTimeout(Duration.ofHours(10)));
 
 		clientBuilders.put("webflux",
 				McpClient
 					.sync(WebClientStreamableHttpTransport
 						.builder(WebClient.builder().baseUrl("http://localhost:" + port))
 						.endpoint(mcpEndpoint)
+						.jsonMapper(JSON_MAPPER)
 						.build())
 					.requestTimeout(Duration.ofHours(10)));
 	}

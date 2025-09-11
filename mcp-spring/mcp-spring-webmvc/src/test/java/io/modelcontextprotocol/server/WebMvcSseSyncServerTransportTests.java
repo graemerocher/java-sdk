@@ -4,7 +4,6 @@
 
 package io.modelcontextprotocol.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.modelcontextprotocol.server.transport.WebMvcSseServerTransportProvider;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
@@ -18,6 +17,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
+
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 
 @Timeout(15)
 class WebMvcSseSyncServerTransportTests extends AbstractMcpSyncServerTests {
@@ -37,7 +38,7 @@ class WebMvcSseSyncServerTransportTests extends AbstractMcpSyncServerTests {
 		@Bean
 		public WebMvcSseServerTransportProvider webMvcSseServerTransportProvider() {
 			return WebMvcSseServerTransportProvider.builder()
-				.objectMapper(new ObjectMapper())
+				.jsonMapper(JSON_MAPPER)
 				.messageEndpoint(MESSAGE_ENDPOINT)
 				.build();
 		}

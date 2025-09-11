@@ -4,6 +4,7 @@
 
 package io.modelcontextprotocol.client.transport;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -126,7 +127,9 @@ public class WebClientStreamableHttpTransportErrorHandlingTest {
 		server.setExecutor(null);
 		server.start();
 
-		transport = WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(HOST)).build();
+		transport = WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(HOST))
+			.jsonMapper(JSON_MAPPER)
+			.build();
 	}
 
 	@AfterEach
@@ -375,6 +378,7 @@ public class WebClientStreamableHttpTransportErrorHandlingTest {
 		var transport = WebClientStreamableHttpTransport.builder(WebClient.builder().baseUrl(HOST))
 			.endpoint("/mcp-sse")
 			.openConnectionOnStartup(true) // This will trigger GET request on connect
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		// First connect successfully

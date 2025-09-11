@@ -31,6 +31,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import reactor.core.publisher.Mono;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
+import static io.modelcontextprotocol.utils.ToolsUtils.EMPTY_JSON_SCHEMA;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.json;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,6 +57,7 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var server = prepareAsyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.requestTimeout(Duration.ofSeconds(1000))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (
@@ -74,15 +77,6 @@ public abstract class AbstractStatelessIntegrationTests {
 	// ---------------------------------------
 	// Tools Tests
 	// ---------------------------------------
-
-	String emptyJsonSchema = """
-			{
-				"$schema": "http://json-schema.org/draft-07/schema#",
-				"type": "object",
-				"properties": {}
-			}
-			""";
-
 	@ParameterizedTest(name = "{0} : {displayName} ")
 	@ValueSource(strings = { "httpclient", "webflux" })
 	void testToolCallSuccess(String clientType) {
@@ -92,7 +86,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		var callResponse = new McpSchema.CallToolResult(List.of(new McpSchema.TextContent("CALL RESPONSE")), null);
 		McpStatelessServerFeatures.SyncToolSpecification tool1 = McpStatelessServerFeatures.SyncToolSpecification
 			.builder()
-			.tool(Tool.builder().name("tool1").description("tool1 description").inputSchema(emptyJsonSchema).build())
+			.tool(Tool.builder().name("tool1").description("tool1 description").inputSchema(EMPTY_JSON_SCHEMA).build())
 			.callHandler((ctx, request) -> {
 
 				try {
@@ -115,6 +109,7 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -145,7 +140,7 @@ public abstract class AbstractStatelessIntegrationTests {
 				.tool(Tool.builder()
 					.name("tool1")
 					.description("tool1 description")
-					.inputSchema(emptyJsonSchema)
+					.inputSchema(EMPTY_JSON_SCHEMA)
 					.build())
 				.callHandler((context, request) -> {
 					// We trigger a timeout on blocking read, raising an exception
@@ -153,6 +148,7 @@ public abstract class AbstractStatelessIntegrationTests {
 					return null;
 				})
 				.build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.requestTimeout(Duration.ofMillis(6666)).build()) {
@@ -180,7 +176,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		var callResponse = new McpSchema.CallToolResult(List.of(new McpSchema.TextContent("CALL RESPONSE")), null);
 		McpStatelessServerFeatures.SyncToolSpecification tool1 = McpStatelessServerFeatures.SyncToolSpecification
 			.builder()
-			.tool(Tool.builder().name("tool1").description("tool1 description").inputSchema(emptyJsonSchema).build())
+			.tool(Tool.builder().name("tool1").description("tool1 description").inputSchema(EMPTY_JSON_SCHEMA).build())
 			.callHandler((ctx, request) -> {
 				// perform a blocking call to a remote service
 				try {
@@ -204,6 +200,7 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var mcpServer = prepareSyncServerBuilder().capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool1)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.toolsChangeConsumer(toolsUpdate -> {
@@ -241,7 +238,7 @@ public abstract class AbstractStatelessIntegrationTests {
 				.tool(Tool.builder()
 					.name("tool2")
 					.description("tool2 description")
-					.inputSchema(emptyJsonSchema)
+					.inputSchema(EMPTY_JSON_SCHEMA)
 					.build())
 				.callHandler((exchange, request) -> callResponse)
 				.build();
@@ -259,7 +256,7 @@ public abstract class AbstractStatelessIntegrationTests {
 
 		var clientBuilder = clientBuilders.get(clientType);
 
-		var mcpServer = prepareSyncServerBuilder().build();
+		var mcpServer = prepareSyncServerBuilder().jsonMapper(JSON_MAPPER).build();
 
 		try (var mcpClient = clientBuilder.build()) {
 
@@ -308,6 +305,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -380,6 +378,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -441,6 +440,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -491,6 +491,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
 			.tools(tool)
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {
@@ -524,6 +525,7 @@ public abstract class AbstractStatelessIntegrationTests {
 		// Start server without tools
 		var mcpServer = prepareSyncServerBuilder().serverInfo("test-server", "1.0.0")
 			.capabilities(ServerCapabilities.builder().tools(true).build())
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.build()) {

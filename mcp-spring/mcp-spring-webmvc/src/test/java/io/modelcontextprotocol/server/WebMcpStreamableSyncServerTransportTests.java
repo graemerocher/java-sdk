@@ -16,11 +16,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.modelcontextprotocol.server.transport.WebMvcStreamableServerTransportProvider;
 import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
 import reactor.netty.DisposableServer;
+
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 
 /**
  * Tests for {@link McpAsyncServer} using {@link WebFluxSseServerTransportProvider}.
@@ -49,7 +49,7 @@ class WebMcpStreamableSyncServerTransportTests extends AbstractMcpSyncServerTest
 		@Bean
 		public WebMvcStreamableServerTransportProvider webMvcSseServerTransportProvider() {
 			return WebMvcStreamableServerTransportProvider.builder()
-				.objectMapper(new ObjectMapper())
+				.jsonMapper(JSON_MAPPER)
 				.mcpEndpoint(MCP_ENDPOINT)
 				.build();
 		}

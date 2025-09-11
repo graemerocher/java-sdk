@@ -8,6 +8,8 @@ import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportPro
 import io.modelcontextprotocol.spec.McpServerTransportProvider;
 import org.junit.jupiter.api.Timeout;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
+
 /**
  * Tests for {@link McpSyncServer} using {@link HttpServletSseServerTransportProvider}.
  *
@@ -17,7 +19,10 @@ import org.junit.jupiter.api.Timeout;
 class ServletSseMcpSyncServerTests extends AbstractMcpSyncServerTests {
 
 	protected McpServerTransportProvider createMcpTransportProvider() {
-		return HttpServletSseServerTransportProvider.builder().messageEndpoint("/mcp/message").build();
+		return HttpServletSseServerTransportProvider.builder()
+			.jsonMapper(JSON_MAPPER)
+			.messageEndpoint("/mcp/message")
+			.build();
 	}
 
 	@Override

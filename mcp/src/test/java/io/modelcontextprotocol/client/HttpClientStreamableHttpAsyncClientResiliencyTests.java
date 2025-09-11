@@ -13,12 +13,14 @@ import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTranspor
 import io.modelcontextprotocol.spec.McpClientTransport;
 import reactor.test.StepVerifier;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
+
 @Timeout(15)
 public class HttpClientStreamableHttpAsyncClientResiliencyTests extends AbstractMcpAsyncClientResiliencyTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return HttpClientStreamableHttpTransport.builder(host).build();
+		return HttpClientStreamableHttpTransport.builder(host).jsonMapper(JSON_MAPPER).build();
 	}
 
 	@Test

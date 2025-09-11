@@ -16,6 +16,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import org.springframework.web.reactive.function.client.WebClient;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
+
 /**
  * Tests for the {@link McpSyncClient} with {@link WebFluxSseClientTransport}.
  *
@@ -36,7 +38,7 @@ class WebFluxSseMcpSyncClientTests extends AbstractMcpSyncClientTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return WebFluxSseClientTransport.builder(WebClient.builder().baseUrl(host)).build();
+		return WebFluxSseClientTransport.builder(WebClient.builder().baseUrl(host)).jsonMapper(JSON_MAPPER).build();
 	}
 
 	@BeforeAll

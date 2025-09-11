@@ -12,13 +12,13 @@ import java.util.function.BiFunction;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.startup.Tomcat;
+
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
@@ -59,7 +59,7 @@ class McpCompletionTests {
 	public void before() {
 		// Create and con figure the transport provider
 		mcpServerTransportProvider = HttpServletSseServerTransportProvider.builder()
-			.objectMapper(new ObjectMapper())
+			.jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.build();
 
@@ -72,7 +72,8 @@ class McpCompletionTests {
 			throw new RuntimeException("Failed to start Tomcat", e);
 		}
 
-		this.clientBuilder = McpClient.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT).build());
+		this.clientBuilder = McpClient
+			.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT).jsonMapper(JSON_MAPPER).build());
 	}
 
 	@AfterEach
@@ -114,6 +115,7 @@ class McpCompletionTests {
 			.resources(new McpServerFeatures.SyncResourceSpecification(resource,
 					(exchange, req) -> new ReadResourceResult(List.of())))
 			.completions(new McpServerFeatures.SyncCompletionSpecification(resourceRef, completionHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0"))
@@ -155,6 +157,7 @@ class McpCompletionTests {
 					(mcpSyncServerExchange, getPromptRequest) -> null))
 			.completions(new McpServerFeatures.SyncCompletionSpecification(
 					new PromptReference("ref/prompt", "test-prompt"), completionHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0"))
@@ -220,6 +223,7 @@ class McpCompletionTests {
 					(exchange, req) -> new ReadResourceResult(List.of())))
 			.completions(new McpServerFeatures.SyncCompletionSpecification(
 					new ResourceReference("ref/resource", "db://{database}/{table}"), completionHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0"))
@@ -297,6 +301,7 @@ class McpCompletionTests {
 					(exchange, req) -> new ReadResourceResult(List.of())))
 			.completions(new McpServerFeatures.SyncCompletionSpecification(
 					new ResourceReference("ref/resource", "db://{database}/{table}"), completionHandler))
+			.jsonMapper(JSON_MAPPER)
 			.build();
 
 		try (var mcpClient = clientBuilder.clientInfo(new McpSchema.Implementation("Sample" + "client", "0.0.0"))

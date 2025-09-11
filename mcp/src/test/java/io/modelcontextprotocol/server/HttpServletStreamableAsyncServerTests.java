@@ -6,10 +6,10 @@ package io.modelcontextprotocol.server;
 
 import org.junit.jupiter.api.Timeout;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.modelcontextprotocol.server.transport.HttpServletStreamableServerTransportProvider;
 import io.modelcontextprotocol.spec.McpStreamableServerTransportProvider;
+
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 
 /**
  * Tests for {@link McpAsyncServer} using
@@ -22,7 +22,7 @@ class HttpServletStreamableAsyncServerTests extends AbstractMcpAsyncServerTests 
 
 	protected McpStreamableServerTransportProvider createMcpTransportProvider() {
 		return HttpServletStreamableServerTransportProvider.builder()
-			.objectMapper(new ObjectMapper())
+			.jsonMapper(JSON_MAPPER)
 			.mcpEndpoint("/mcp/message")
 			.build();
 	}

@@ -3,6 +3,7 @@
  */
 package io.modelcontextprotocol.server;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Duration;
@@ -20,8 +21,6 @@ import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.modelcontextprotocol.AbstractMcpClientServerIntegrationTests;
 import io.modelcontextprotocol.client.McpClient;
@@ -52,7 +51,7 @@ class WebMvcStreamableIntegrationTests extends AbstractMcpClientServerIntegratio
 		@Bean
 		public WebMvcStreamableServerTransportProvider webMvcStreamableServerTransportProvider() {
 			return WebMvcStreamableServerTransportProvider.builder()
-				.objectMapper(new ObjectMapper())
+				.jsonMapper(JSON_MAPPER)
 				.contextExtractor(TEST_CONTEXT_EXTRACTOR)
 				.mcpEndpoint(MESSAGE_ENDPOINT)
 				.build();
@@ -85,12 +84,14 @@ class WebMvcStreamableIntegrationTests extends AbstractMcpClientServerIntegratio
 			.put("httpclient",
 					McpClient.sync(HttpClientStreamableHttpTransport.builder("http://localhost:" + PORT)
 						.endpoint(MESSAGE_ENDPOINT)
+						.jsonMapper(JSON_MAPPER)
 						.build()).initializationTimeout(Duration.ofHours(10)).requestTimeout(Duration.ofHours(10)));
 
 		clientBuilders.put("webflux",
 				McpClient.sync(WebClientStreamableHttpTransport
 					.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
 					.endpoint(MESSAGE_ENDPOINT)
+					.jsonMapper(JSON_MAPPER)
 					.build()));
 
 		// Get the transport from Spring context

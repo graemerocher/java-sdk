@@ -16,6 +16,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import io.modelcontextprotocol.client.transport.WebFluxSseClientTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
+
 /**
  * Tests for the {@link McpAsyncClient} with {@link WebFluxSseClientTransport}.
  *
@@ -36,7 +38,7 @@ class WebFluxSseMcpAsyncClientTests extends AbstractMcpAsyncClientTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return WebFluxSseClientTransport.builder(WebClient.builder().baseUrl(host)).build();
+		return WebFluxSseClientTransport.builder(WebClient.builder().baseUrl(host)).jsonMapper(JSON_MAPPER).build();
 	}
 
 	@BeforeAll

@@ -16,8 +16,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.client.transport.WebFluxSseClientTransport;
@@ -30,6 +28,8 @@ import io.modelcontextprotocol.server.TestUtil;
 import io.modelcontextprotocol.server.transport.WebFluxSseServerTransportProvider;
 import reactor.netty.DisposableServer;
 import reactor.netty.http.server.HttpServer;
+
+import static io.modelcontextprotocol.utils.McpJsonMapperUtils.JSON_MAPPER;
 
 @Timeout(15)
 class WebFluxSseIntegrationTests extends AbstractMcpClientServerIntegrationTests {
@@ -53,12 +53,14 @@ class WebFluxSseIntegrationTests extends AbstractMcpClientServerIntegrationTests
 		clientBuilders
 			.put("httpclient",
 					McpClient.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
+						.jsonMapper(JSON_MAPPER)
 						.sseEndpoint(CUSTOM_SSE_ENDPOINT)
 						.build()).requestTimeout(Duration.ofHours(10)));
 
 		clientBuilders.put("webflux",
 				McpClient
 					.sync(WebFluxSseClientTransport.builder(WebClient.builder().baseUrl("http://localhost:" + PORT))
+						.jsonMapper(JSON_MAPPER)
 						.sseEndpoint(CUSTOM_SSE_ENDPOINT)
 						.build())
 					.requestTimeout(Duration.ofHours(10)));
@@ -78,8 +80,7 @@ class WebFluxSseIntegrationTests extends AbstractMcpClientServerIntegrationTests
 	@BeforeEach
 	public void before() {
 
-		this.mcpServerTransportProvider = new WebFluxSseServerTransportProvider.Builder()
-			.objectMapper(new ObjectMapper())
+		this.mcpServerTransportProvider = new WebFluxSseServerTransportProvider.Builder().jsonMapper(JSON_MAPPER)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.sseEndpoint(CUSTOM_SSE_ENDPOINT)
 			.contextExtractor(TEST_CONTEXT_EXTRACTOR)

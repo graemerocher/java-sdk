@@ -4,8 +4,6 @@
 
 package io.modelcontextprotocol.server.transport;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.server.McpServer;
@@ -17,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HttpServletSseServerCustomContextPathTests {
@@ -40,7 +39,7 @@ class HttpServletSseServerCustomContextPathTests {
 
 		// Create and configure the transport provider
 		mcpServerTransportProvider = HttpServletSseServerTransportProvider.builder()
-			.objectMapper(new ObjectMapper())
+			.jsonMapper(JSON_MAPPER)
 			.baseUrl(CUSTOM_CONTEXT_PATH)
 			.messageEndpoint(CUSTOM_MESSAGE_ENDPOINT)
 			.sseEndpoint(CUSTOM_SSE_ENDPOINT)
@@ -57,6 +56,7 @@ class HttpServletSseServerCustomContextPathTests {
 		}
 
 		this.clientBuilder = McpClient.sync(HttpClientSseClientTransport.builder("http://localhost:" + PORT)
+			.jsonMapper(JSON_MAPPER)
 			.sseEndpoint(CUSTOM_CONTEXT_PATH + CUSTOM_SSE_ENDPOINT)
 			.build());
 	}
@@ -79,7 +79,10 @@ class HttpServletSseServerCustomContextPathTests {
 
 	@Test
 	void testCustomContextPath() {
-		var server = McpServer.async(mcpServerTransportProvider).serverInfo("test-server", "1.0.0").build();
+		var server = McpServer.async(mcpServerTransportProvider)
+			.jsonMapper(JSON_MAPPER)
+			.serverInfo("test-server", "1.0.0")
+			.build();
 		try (//@formatter:off
 			var client = clientBuilder.clientInfo(new McpSchema.Implementation("Sample " + "client", "0.0.0")) .build()) { //@formatter:on
 

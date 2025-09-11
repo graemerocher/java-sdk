@@ -13,6 +13,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
+import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
+
 /**
  * Tests for the {@link McpSyncClient} with {@link HttpClientSseClientTransport}.
  *
@@ -33,7 +35,7 @@ class HttpSseMcpAsyncClientTests extends AbstractMcpAsyncClientTests {
 
 	@Override
 	protected McpClientTransport createMcpTransport() {
-		return HttpClientSseClientTransport.builder(host).build();
+		return HttpClientSseClientTransport.builder(host).jsonMapper(JSON_MAPPER).build();
 	}
 
 	@BeforeAll

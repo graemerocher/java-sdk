@@ -13,8 +13,6 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import io.modelcontextprotocol.spec.McpClientTransport;
 
-import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
-
 /**
  * Tests for the {@link McpSyncClient} with {@link HttpClientSseClientTransport}.
  *

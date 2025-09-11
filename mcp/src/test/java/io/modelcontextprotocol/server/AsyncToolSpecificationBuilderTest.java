@@ -4,7 +4,6 @@
 
 package io.modelcontextprotocol.server;
 
-import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static io.modelcontextprotocol.util.ToolsUtils.EMPTY_JSON_SCHEMA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

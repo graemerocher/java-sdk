@@ -4,7 +4,6 @@
 
 package io.modelcontextprotocol.client;
 
-import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.io.IOException;

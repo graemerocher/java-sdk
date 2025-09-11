@@ -8,8 +8,6 @@ import io.modelcontextprotocol.server.transport.HttpServletSseServerTransportPro
 import io.modelcontextprotocol.spec.McpServerTransportProvider;
 import org.junit.jupiter.api.Timeout;
 
-import static io.modelcontextprotocol.util.McpJsonMapperUtils.JSON_MAPPER;
-
 /**
  * Tests for {@link McpSyncServer} using {@link HttpServletSseServerTransportProvider}.
  *

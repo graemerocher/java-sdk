@@ -43,7 +43,7 @@
             <!-- MCP JSON Jackson -->
             <dependency>
                 <groupId>io.modelcontextprotocol.sdk</groupId>
-                <artifactId>mcp-json-jackson</artifactId>
+                <artifactId>mcp-json-jackson2</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
